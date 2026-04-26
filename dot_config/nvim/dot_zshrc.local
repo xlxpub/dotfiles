@@ -1,0 +1,8 @@
+
+# 媒体平台配置
+export MEDIA_COOKIE=''
+export MEDIA_PROXY='http://localhost:8888'
+# LLM / OpenAI 配置
+export OPENAI_BASE_URL="https://api.deepseek.com"
+export OPENAI_API_KEY=""
+export OPENAI_MODEL_NAME="deepseek-chat"

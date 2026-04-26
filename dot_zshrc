@@ -1,0 +1,134 @@
+# 基础 zsh 配置
+
+# 语言设置
+export LANG=zh_CN.UTF-8
+export LC_ALL=zh_CN.UTF-8
+export EDITOR="nvim"
+
+# 历史记录
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+
+export FUNCNEST=100
+# PATH 设置
+export PATH=/usr/local/opt/openjdk@8/bin:/usr/local/opt/python@3.9/bin:$PATH:$HOME/go/bin:$HOME/.docker/bin
+export PATH=$PATH:$HOME/nu
+export PATH=$HOME/.local/bin:$PATH
+
+# 开发环境
+export JAVA_HOME=/usr/local/opt/openjdk@8
+export GOPATH=/Users/xueleixi/go
+export ANDROID_NDK_HOME=/Users/xueleixi/Library/Android/sdk
+
+
+
+# zoxide 初始化（快速目录导航）
+eval "$(zoxide init zsh)"
+
+# Starship 提示符初始化
+eval "$(starship init zsh)"
+
+# zsh-completions 补全增强（必须在 compinit 之前加入 fpath）
+if [[ -d ~/.local/share/zsh/plugins/zsh-completions/src ]]; then
+  fpath=(~/.local/share/zsh/plugins/zsh-completions/src $fpath)
+fi
+
+# 加载补全系统（必须在所有插件加载之前）
+# 优化：使用缓存策略，24小时内使用缓存（快 10 倍）
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qNmh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+# 补全配置：
+# 1. 不区分大小写
+# 2. 支持下划线、点、横线分隔符跳过补全（hello_2026.txt 中输入 2026 可以补全）
+zstyle ':completion:*' matcher-list \
+  'm:{a-zA-Z}={A-Za-z}' \
+  'r:|[._-]=* r:|=*' \
+  'l:|=* r:|=*'
+
+# zsh-autosuggestions 自动建议
+if [[ -f ~/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source ~/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# zsh-syntax-highlighting 语法高亮
+if [[ -f ~/.local/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source ~/.local/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+# git 插件（别名和函数）
+if [[ -f ~/.local/share/zsh/plugins/git/git.plugin.zsh ]]; then
+  source ~/.local/share/zsh/plugins/git/git.plugin.zsh
+fi
+
+# fzf 模糊搜索
+if [[ -f ~/.fzf.zsh ]]; then
+  source ~/.fzf.zsh
+fi
+
+# fzf 配置选项
+# export FZF_DEFAULT_OPTS="--height 40% --reverse --border --inline-info"
+export FZF_DEFAULT_OPTS="
+--height 40%
+--layout reverse
+--border
+--preview '
+if [ -d {} ]; then
+  tree -C {} | head -100
+else
+  bat --color=always --style=numbers {}
+fi
+'
+--preview-window right:60%:wrap
+--bind '?:toggle-preview'
+"
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+
+# 别名
+alias cc="claude-internal"
+alias claude="claude-internal"
+alias zi="zoxide query --interactive"
+alias v="nvim"
+alias vi="nvim"
+alias vim="nvim"
+alias lg="lazygit"
+alias read_union='python /Users/xueleixi/go/projects/woa/tools/py/readunion.py'
+alias ls="lsd"
+alias ll="lsd -l"
+alias la="lsd -la"
+alias lt="lsd --tree"
+
+# vim keybind 设置
+bindkey -v                                    # 启用 Vi 模式
+export KEYTIMEOUT=1                           # 减少 Esc 延迟
+
+# 删除键修复
+bindkey "^?" backward-delete-char             # Backspace 键
+bindkey "^H" backward-delete-char             # Ctrl+H 删除前一个字符
+bindkey "^[[3~" delete-char                   # Delete 键
+
+# 常用导航键
+bindkey "^[[H" beginning-of-line              # Home 键 - 行首
+bindkey "^[[F" end-of-line                    # End 键 - 行尾
+
+# 方向键导航
+bindkey "^[[A" up-line-or-history             # 上方向键 - 历史记录向前
+bindkey "^[[B" down-line-or-history           # 下方向键 - 历史记录向后
+bindkey "^[[C" forward-char                   # 右方向键 - 光标向右
+bindkey "^[[D" backward-char                  # 左方向键 - 光标向左
+
+# Vi 模式下的快捷键
+bindkey -M viins '^A' beginning-of-line       # Ctrl+A - 插入模式下跳到行首
+bindkey -M viins '^E' end-of-line             # Ctrl+E - 插入模式下跳到行尾
+bindkey -M viins "jj" vi-cmd-mode             # jj - 快速从插入模式进入命令模式
+
+  if [[ -f ~/.zshrc.local ]]; then
+    source ~/.zshrc.local
+  fi
