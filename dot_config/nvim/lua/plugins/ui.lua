@@ -226,11 +226,27 @@ return {
 			-- 注册 Telescope 扩展
 			require("telescope").load_extension("aerial")
 			-- winbar 显示符号面包屑（仅在有 LSP 附加的 buffer 生效）
+			-- 自定义 winbar 函数，替代已废弃的 fmt_winbar
+			_G._aerial_winbar = function()
+				local ok, aerial = pcall(require, "aerial")
+				if not ok then
+					return ""
+				end
+				local loc = aerial.get_location(true)
+				if not loc or #loc == 0 then
+					return ""
+				end
+				local parts = {}
+				for _, item in ipairs(loc) do
+					table.insert(parts, item.icon .. " " .. item.name)
+				end
+				return table.concat(parts, " > ")
+			end
 			vim.api.nvim_create_autocmd("LspAttach", {
 				callback = function()
 					vim.api.nvim_set_option_value(
 						"winbar",
-						"%{%v:lua.require'aerial'.fmt_winbar()%}",
+						"%{%v:lua._aerial_winbar()%}",
 						{ scope = "local", win = vim.api.nvim_get_current_win() }
 					)
 				end,
