@@ -141,6 +141,8 @@ return {
         { "<leader>y", group = "Yank 历史" },
         { "<leader>g", group = "Git 工具" },
         { "<leader>m", group = "Markdown" },
+        { "<leader>j", group = "JSON" },
+        { "<leader>je", group = "Json Extract" },
         -- 下面几条是 Vim 内置命令（非 keymap），在 which-key 里补充说明
         { "]c", desc = "下一个 diff 改动点（diff 模式）/ 下一个 class（普通模式）" },
         { "[c", desc = "上一个 diff 改动点（diff 模式）/ 上一个 class（普通模式）" },

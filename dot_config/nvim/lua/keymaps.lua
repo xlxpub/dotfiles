@@ -106,10 +106,12 @@ map("n", "]x", "/<<<<<<<<cr>", { desc = "跳到下一个冲突块" })
 map("n", "[x", "?<<<<<<<<cr>", { desc = "跳到上一个冲突块" })
 
 -- ══════════════════════════════
---  JSON 中的 markdown 字段预览
---  （光标放在 JSON 字符串值上，按下快捷键即可把 \n/\t 反转义后渲染）
+--  JSON 内嵌字段提取预览（je = Json Extract）
+--  光标放在 JSON 字符串值上，提取并反转义后渲染
 -- ══════════════════════════════
-map("n", "<leader>mj", function() require("tools.json_md_preview").preview() end,
-	{ desc = "JSON 字段 → Markdown 预览（buffer）" })
-map("n", "<leader>mJ", function() require("tools.json_md_preview").preview_browser() end,
-	{ desc = "JSON 字段 → Markdown 预览（浏览器）" })
+map("n", "<leader>jej", function() require("tools.json_md_preview").preview_json() end,
+	{ desc = "提取 JSON 中的 JSON 字符串（格式化预览）" })
+map("n", "<leader>jem", function() require("tools.json_md_preview").preview() end,
+	{ desc = "提取 JSON 中的 Markdown（buffer 预览）" })
+map("n", "<leader>jeM", function() require("tools.json_md_preview").preview_browser() end,
+	{ desc = "提取 JSON 中的 Markdown（浏览器预览）" })

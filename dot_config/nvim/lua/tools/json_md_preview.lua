@@ -69,9 +69,13 @@ end
 ---把内容写到一个 scratch buffer 并打开
 ---若已有同名预览 buffer 则复用（避免 E95 / 多窗口堆叠）
 ---@param content string
+---@param opts? { filetype?: string, buf_name?: string }
 ---@return integer bufnr
-local function open_in_scratch(content)
-	local preview_name = "[JSON-MD Preview]"
+local function open_in_scratch(content, opts)
+	opts = opts or {}
+	local ft = opts.filetype or "markdown"
+	local preview_name_override = opts.buf_name
+	local preview_name = preview_name_override or "[JSON-MD Preview]"
 
 	-- 找已有的预览 buffer（按完整路径匹配，nvim 把名字存为绝对路径）
 	local existing_buf = nil
@@ -85,12 +89,12 @@ local function open_in_scratch(content)
 		end
 	end
 
+	local src_win = vim.api.nvim_get_current_win() -- 记住源文件窗口
 	local buf, win
 	if existing_buf then
-		-- 复用：如果已经有窗口显示，就切过去；否则在右侧重新打开
+		-- 复用：如果已经有窗口显示，直接更新内容；否则在右侧重新打开
 		local wins = vim.fn.win_findbuf(existing_buf)
 		if #wins > 0 then
-			vim.api.nvim_set_current_win(wins[1])
 			win = wins[1]
 		else
 			vim.cmd("botright vsplit")
@@ -101,6 +105,8 @@ local function open_in_scratch(content)
 		-- 清空旧内容（buffer 是 nofile 可以直接改）
 		vim.bo[buf].modifiable = true
 		vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
+		-- 复用时也更新 filetype（Markdown/JSON 预览可能交替使用）
+		vim.bo[buf].filetype = ft
 	else
 		-- 新建预览窗
 		vim.cmd("botright vnew")
@@ -109,7 +115,7 @@ local function open_in_scratch(content)
 		vim.bo[buf].buftype = "nofile"
 		vim.bo[buf].bufhidden = "hide" -- 改为 hide，关窗不销毁 buffer，下次可复用
 		vim.bo[buf].swapfile = false
-		vim.bo[buf].filetype = "markdown"
+		vim.bo[buf].filetype = ft
 		vim.api.nvim_buf_set_name(buf, preview_name)
 		-- q 快速关闭窗口（不销毁 buffer，保留给下次复用）
 		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = buf, silent = true, desc = "关闭预览窗" })
@@ -126,8 +132,10 @@ local function open_in_scratch(content)
 
 	local lines = vim.split(content, "\n", { plain = true })
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-	-- 光标回到顶部
+	-- 预览窗光标回到顶部
 	vim.api.nvim_win_set_cursor(win, { 1, 0 })
+	-- 焦点还回源文件窗口，方便连续预览不同字段
+	vim.api.nvim_set_current_win(src_win)
 	return buf
 end
 
@@ -156,6 +164,62 @@ function M.preview_browser()
 			vim.notify("MarkdownPreview 未安装或加载失败", vim.log.levels.WARN)
 		end
 	end, 100)
+end
+
+---把 Lua 表格式化为带缩进的 JSON 字符串
+---@param value any  vim.json.decode 返回的 Lua 值
+---@param indent? integer 当前缩进层级
+---@return string
+local function json_pretty(value, indent)
+	indent = indent or 0
+	local t = type(value)
+	if t == "nil" or value == vim.NIL then
+		return "null"
+	elseif t == "boolean" or t == "number" then
+		return tostring(value)
+	elseif t == "string" then
+		return vim.json.encode(value)
+	elseif t == "table" then
+		-- 判断是数组还是对象
+		local is_array = vim.islist(value)
+		if is_array then
+			if #value == 0 then return "[]" end
+			local items = {}
+			for _, v in ipairs(value) do
+				table.insert(items, string.rep("  ", indent + 1) .. json_pretty(v, indent + 1))
+			end
+			return "[\n" .. table.concat(items, ",\n") .. "\n" .. string.rep("  ", indent) .. "]"
+		else
+			local keys = {}
+			for k in pairs(value) do table.insert(keys, k) end
+			if #keys == 0 then return "{}" end
+			table.sort(keys)
+			local items = {}
+			for _, k in ipairs(keys) do
+				local kstr = vim.json.encode(k)
+				table.insert(items, string.rep("  ", indent + 1) .. kstr .. ": " .. json_pretty(value[k], indent + 1))
+			end
+			return "{\n" .. table.concat(items, ",\n") .. "\n" .. string.rep("  ", indent) .. "}"
+		end
+	end
+	return tostring(value)
+end
+
+---主命令：提取光标处 JSON 字符串值，尝试解析并格式化为 JSON 预览
+function M.preview_json()
+	local content = get_json_string_at_cursor()
+	if not content then
+		vim.notify("未能识别光标所在的 JSON 字符串字段", vim.log.levels.WARN)
+		return
+	end
+	-- 尝试把提取到的字符串当作 JSON 解析
+	local ok, decoded = pcall(vim.json.decode, content)
+	if not ok then
+		vim.notify("该字段值不是有效 JSON：" .. tostring(decoded), vim.log.levels.WARN)
+		return
+	end
+	local formatted = json_pretty(decoded)
+	open_in_scratch(formatted, { filetype = "json", buf_name = "[JSON Preview]" })
 end
 
 return M
