@@ -11,15 +11,54 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_FIND_NO_DUPS
 
 export FUNCNEST=100
-# PATH 设置
-export PATH=/usr/local/opt/openjdk@8/bin:/usr/local/opt/python@3.9/bin:$PATH:$HOME/go/bin:$HOME/.docker/bin
-export PATH=$PATH:$HOME/nu
-export PATH=$HOME/.local/bin:$PATH
 
-# 开发环境
-export JAVA_HOME=/usr/local/opt/openjdk@8
-export GOPATH=/Users/xueleixi/go
-export ANDROID_NDK_HOME=/Users/xueleixi/Library/Android/sdk
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  PATH 与开发环境
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# homebrew（M 芯片）—— 自动注入 /opt/homebrew/bin 等
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# GNU 工具（覆盖 macOS 自带的 BSD 版本）
+path=(
+  /opt/homebrew/opt/findutils/libexec/gnubin
+  /opt/homebrew/opt/gnu-sed/libexec/gnubin
+  /opt/homebrew/opt/grep/libexec/gnubin
+  /opt/homebrew/opt/coreutils/libexec/gnubin
+  $path
+)
+
+# 用户本地 bin
+path=($HOME/.local/bin $HOME/bin $path)
+
+# Go
+export GOROOT="/usr/local/go"
+export GOPATH="$HOME/go"
+export GOMODCACHE="$GOPATH/pkg/mod"
+export GOCACHE="$HOME/Library/Caches/go-build"
+path=($GOROOT/bin $GOPATH/bin $path)
+
+# pyenv
+path=($HOME/.pyenv/shims $path)
+
+# 其他工具
+path=(
+  $HOME/.codebuddy/bin
+  /opt/podman/bin
+  /opt/homebrew/opt/mysql@8.0/bin
+  $path
+)
+
+# JDK（如果装了 M 芯片 homebrew 版 openjdk@8 再取消注释）
+# export JAVA_HOME="/opt/homebrew/opt/openjdk@8"
+# path=($JAVA_HOME/bin $path)
+
+# PATH 去重 + 剔除不存在目录（zsh 内置：-U 数组去重，(N-/) 只保留存在的目录）
+typeset -U path
+path=($^path(N-/))
+export PATH
+
+# Android SDK / NDK（修掉原来路径里的错别字 xueleixi）
+# export ANDROID_NDK_HOME="$HOME/Library/Android/sdk"
 
 
 
@@ -97,7 +136,7 @@ alias v="nvim"
 alias vi="nvim"
 alias vim="nvim"
 alias lg="lazygit"
-alias read_union='python /Users/xueleixi/go/projects/woa/tools/py/readunion.py'
+alias read_union='python $HOME/go/projects/woa/tools/py/readunion.py'
 alias ls="lsd"
 alias ll="lsd -l"
 alias la="lsd -la"
