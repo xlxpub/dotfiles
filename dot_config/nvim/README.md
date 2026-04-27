@@ -6,6 +6,22 @@
 
 ## 📝 最近配置变更（2026-04）
 
+### 🔍 Telescope 改为遵守 .gitignore（修复 `.venv` 无法忽略）
+**问题**：`<leader>ff` 查找文件时把 `.venv/` 下的 Python 虚拟环境文件全列出来了，即使 `.venv` 已加入 `.gitignore` 也没生效。
+
+**根因**：`lua/plugins/telescope.lua` 里 `find_files` / `live_grep` / `grep_string` 都显式加了 `--no-ignore`，强制让 fd / rg 无视 `.gitignore`。
+
+**修复**：
+- 移除所有 `--no-ignore` 参数，让 fd / rg 默认遵守 `.gitignore`（项目级）和 `~/.config/fd/ignore`（全局级）。
+- 保留 `--hidden`（仍搜索隐藏文件）。
+- 在 `--exclude` / `--glob=!...` 兜底列表里追加 `.venv` / `venv` / `__pycache__`，即使项目未配置 gitignore 也会强制排除。
+
+行为变化：
+- 以后把任何目录加到 `.gitignore` 就会被 Telescope 自动忽略，**不用再改 nvim 配置**。
+- 要临时搜索被忽略的文件，可以在 Telescope 浮窗里用 `:Telescope find_files no_ignore=true` 覆盖。
+
+文件：`lua/plugins/telescope.lua`
+
 ### 🏷 iTerm2 窗口标题显示当前文件/目录
 **问题**：nvim 启动后劫持终端标题控制权，zsh 原本的 `precmd` 标题更新失效，iTerm2 回退显示 Profile 名（"Default"）。
 
@@ -157,13 +173,10 @@ vim.deprecate = function() end
 
 文件：`lua/keymaps.lua`、`lua/plugins/editor.lua`
 
-### 🔍 Telescope 搜索覆盖全部文件
-`<leader>ff`（find_files）、`<leader>fg`（live_grep）、`<leader>fs`（grep_string）统一行为：
-- 包含 `.gitignore` 忽略的文件（加 `--no-ignore`）
-- 包含隐藏文件（加 `--hidden`）
-- 强制排除 `.git` / `.idea` / `.vscode` / `node_modules` / `.cache` / `dist` / `build` / `.DS_Store`
+### 🔍 Telescope 搜索覆盖全部文件（已于 2026-04 调整）
+~~`<leader>ff`（find_files）、`<leader>fg`（live_grep）、`<leader>fs`（grep_string）统一行为：包含 `.gitignore` 忽略的文件（加 `--no-ignore`）、包含隐藏文件（加 `--hidden`）、强制排除常见产物目录。~~
 
-文件：`lua/plugins/telescope.lua`
+**已更新**：已移除 `--no-ignore`，现在**默认遵守 `.gitignore`**。详见上方"Telescope 改为遵守 .gitignore"一节。
 
 ### 🔄 外部修改文件自动重载
 Claude/git/其他编辑器改了文件，nvim 自动同步：

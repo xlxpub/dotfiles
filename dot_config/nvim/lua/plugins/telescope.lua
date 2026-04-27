@@ -35,12 +35,14 @@ return {
 				pickers = {
 					find_files = {
 						hidden = true, -- 包含隐藏文件
+						-- 说明：不再加 --no-ignore，让 fd 默认遵守 .gitignore（项目级）
+						-- 及 ~/.config/fd/ignore（全局级）。下面 --exclude 仅作为兜底，
+						-- 用于即使项目没配置 gitignore 也强制排除的常见目录。
 						find_command = {
 							"fd",
 							"--type",
 							"f",
 							"--hidden",
-							"--no-ignore",
 							"--strip-cwd-prefix",
 							"--exclude",
 							".git",
@@ -58,14 +60,20 @@ return {
 							"build",
 							"--exclude",
 							".DS_Store",
+							"--exclude",
+							".venv",
+							"--exclude",
+							"venv",
+							"--exclude",
+							"__pycache__",
 						},
 					},
 					live_grep = {
 						additional_args = function()
-							-- 让 rg 也不遵守 .gitignore 并搜索隐藏文件
+							-- 不再加 --no-ignore，让 rg 遵守 .gitignore
+							-- 仅保留 --hidden 搜索隐藏文件 + glob 兜底排除
 							return {
 								"--hidden",
-								"--no-ignore",
 								"--glob=!.git/*",
 								"--glob=!.idea/*",
 								"--glob=!.vscode/*",
@@ -73,6 +81,9 @@ return {
 								"--glob=!.cache/*",
 								"--glob=!dist/*",
 								"--glob=!build/*",
+								"--glob=!.venv/*",
+								"--glob=!venv/*",
+								"--glob=!__pycache__/*",
 							}
 						end,
 					},
@@ -80,9 +91,10 @@ return {
 						additional_args = function()
 							return {
 								"--hidden",
-								"--no-ignore",
 								"--glob=!.git/*",
 								"--glob=!node_modules/*",
+								"--glob=!.venv/*",
+								"--glob=!venv/*",
 							}
 						end,
 					},
