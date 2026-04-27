@@ -2,6 +2,18 @@
 export LANG=zh_CN.UTF-8
 export LC_ALL=zh_CN.UTF-8
 export EDITOR="nvim"
+# iTerm2 窗口标题显示当前目录名
+DISABLE_AUTO_TITLE=true
+setopt prompt_subst
+
+autoload -Uz add-zsh-hook
+_set_iterm_title() {
+  # %1~ = 最后一级目录名，在 $HOME 下显示为 ~
+  # \e]0; 同时设置窗口标题和 tab/图标名（兼容性最好）
+  print -Pn "\e]0;%1~\a"
+}
+add-zsh-hook precmd _set_iterm_title   # 每次显示提示符前
+add-zsh-hook chpwd  _set_iterm_title   # cd 后立即更新（不等下个命令）
 
 # 历史记录
 HISTFILE=~/.zsh_history
@@ -169,3 +181,8 @@ bindkey -M viins "jj" vi-cmd-mode             # jj - 快速从插入模式进入
   if [[ -f ~/.zshrc.local ]]; then
     source ~/.zshrc.local
   fi
+
+alias start_sailing_proxy="sh $HOME/go/projects/woa/pubtool/app/sailing/cmd/sailing_retrieval_proxy/start_go.sh"
+
+[[ -f $HOME/.env ]] && source $HOME/.env
+

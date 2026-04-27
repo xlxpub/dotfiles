@@ -6,6 +6,35 @@
 
 ## 📝 最近配置变更（2026-04）
 
+### 🏷 iTerm2 窗口标题显示当前文件/目录
+**问题**：nvim 启动后劫持终端标题控制权，zsh 原本的 `precmd` 标题更新失效，iTerm2 回退显示 Profile 名（"Default"）。
+
+**修复**（`lua/options.lua`）：
+```lua
+opt.title = true
+opt.titlestring = [[%{expand("%:t") != "" ? expand("%:t") : fnamemodify(getcwd(), ":t")}]]
+opt.titleold = ""
+```
+
+效果：
+- 打开文件时 → 标题显示文件名（如 `ui.lua`）
+- 没打开文件时 → 显示 CWD 最后一级（如 `nvim`）
+- 切文件时实时更新
+- 退出 nvim 后 zsh 接管，显示目录名
+
+**另需 iTerm2 端配合**：Preferences → Profiles → General → 勾上 `Allow custom window title to be set by applications`（或清空 Custom Window Title 里的 `Default`）。
+
+文件：`lua/options.lua`
+
+### 🔧 修复 gopls 报 "identify GOROOT dir cmd failed"
+打开 Go 文件时 gopls 报 `identify GOROOT dir cmd failed with code 1: { "go", "env", "GOROOT" }`。
+
+**根因**：nvim 启动时 `vim.env.GOROOT` 为空（shell 未 export），gopls spawn 子进程跑 `go env GOROOT` 继承的环境里 `GOROOT` 仍为 nil，偶发失败。
+
+**修复**（`lua/options.lua` 末尾）：启动时自动执行 `go env GOROOT` / `GOPATH` 并注入到 `vim.env`，同时确保 `$GOROOT/bin` 和 `$GOPATH/bin` 在 PATH 中。只在检测到 `go` 可执行时触发，对没装 Go 的机器无影响。
+
+文件：`lua/options.lua`
+
 ### 🔍 JSON 内嵌字段提取预览（je = Json Extract）
 JSON 文件中某个字段的值是转义后的 JSON 或 Markdown 字符串，光标放在该值上按快捷键即可提取、反转义并预览。
 

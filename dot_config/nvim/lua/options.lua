@@ -71,3 +71,41 @@ opt.timeoutlen = 300        -- 键位超时时间（ms）
 
 -- 鼠标
 opt.mouse = "a"
+
+-- ══════════════════════════════
+--  终端窗口标题（iTerm2 标签显示当前目录/文件）
+-- ══════════════════════════════
+opt.title = true
+-- %:t = 当前文件名（不含路径）
+-- %:p:h:t = 当前文件所在目录的最后一级名
+-- 没打开文件时用 CWD 最后一级
+opt.titlestring = [[%{expand("%:t") != "" ? expand("%:t") : fnamemodify(getcwd(), ":t")}]]
+-- nvim 退出时恢复为上一级标题（iTerm2 恢复 zsh 的目录标题）
+opt.titleold = ""
+
+-- ══════════════════════════════
+--  Go 工具链环境变量注入
+--  修复 gopls 启动时报 "identify GOROOT dir cmd failed"
+--  原因：nvim 从 GUI / 其他启动器启动时未继承 shell 的 Go 环境
+-- ══════════════════════════════
+if vim.fn.executable("go") == 1 then
+  if not vim.env.GOROOT or vim.env.GOROOT == "" then
+    local goroot = vim.fn.trim(vim.fn.system("go env GOROOT"))
+    if vim.v.shell_error == 0 and goroot ~= "" then
+      vim.env.GOROOT = goroot
+    end
+  end
+  if not vim.env.GOPATH or vim.env.GOPATH == "" then
+    local gopath = vim.fn.trim(vim.fn.system("go env GOPATH"))
+    if vim.v.shell_error == 0 and gopath ~= "" then
+      vim.env.GOPATH = gopath
+    end
+  end
+  -- 确保 $GOROOT/bin 和 $GOPATH/bin 在 PATH 里（gopls 需要能找到 go 命令）
+  if vim.env.GOROOT and not vim.env.PATH:find(vim.env.GOROOT .. "/bin", 1, true) then
+    vim.env.PATH = vim.env.GOROOT .. "/bin:" .. vim.env.PATH
+  end
+  if vim.env.GOPATH and not vim.env.PATH:find(vim.env.GOPATH .. "/bin", 1, true) then
+    vim.env.PATH = vim.env.GOPATH .. "/bin:" .. vim.env.PATH
+  end
+end
