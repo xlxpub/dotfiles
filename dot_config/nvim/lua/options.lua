@@ -76,10 +76,8 @@ opt.mouse = "a"
 --  终端窗口标题（iTerm2 标签显示当前目录/文件）
 -- ══════════════════════════════
 opt.title = true
--- %:t = 当前文件名（不含路径）
--- %:p:h:t = 当前文件所在目录的最后一级名
--- 没打开文件时用 CWD 最后一级
-opt.titlestring = [[%{expand("%:t") != "" ? expand("%:t") : fnamemodify(getcwd(), ":t")}]]
+-- 始终显示 CWD 最后一级目录名
+opt.titlestring = [[%{fnamemodify(getcwd(),":t")}]]
 -- nvim 退出时恢复为上一级标题（iTerm2 恢复 zsh 的目录标题）
 opt.titleold = ""
 
