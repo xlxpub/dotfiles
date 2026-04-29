@@ -81,6 +81,43 @@ map("n", "<leader>fm", function()
 end, { desc = "搜索结构体方法（Go receiver）" })
 
 -- ══════════════════════════════
+--  Git 操作
+-- ══════════════════════════════
+-- lazygit（浮窗内打开，操作完自动回到 nvim）
+map("n", "<leader>gg", function()
+  local buf = vim.api.nvim_create_buf(false, true)
+  local width = math.floor(vim.o.columns * 0.9)
+  local height = math.floor(vim.o.lines * 0.9)
+  vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = width,
+    height = height,
+    col = math.floor((vim.o.columns - width) / 2),
+    row = math.floor((vim.o.lines - height) / 2),
+    style = "minimal",
+    border = "rounded",
+  })
+  -- 强制浮窗使用不透明背景，避免底层内容透上来
+  vim.api.nvim_set_option_value("winhl", "NormalFloat:Normal,FloatBorder:FloatBorder", { win = 0 })
+  vim.api.nvim_set_option_value("winblend", 0, { win = 0 })
+  vim.fn.termopen("lazygit", {
+    on_exit = function()
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end,
+  })
+  vim.cmd("startinsert")
+end, { desc = "打开 lazygit" })
+
+-- 终端内 git commit（简单提交时用）
+map("n", "<leader>gc", function()
+  vim.cmd("botright split | terminal git commit")
+end, { desc = "Git commit" })
+
+map("n", "<leader>ga", function()
+  vim.cmd("botright split | terminal git add -A && git commit")
+end, { desc = "Git add all + commit" })
+
+-- ══════════════════════════════
 --  LSP 键位（在 lsp.lua 中定义，此处仅备注）
 -- ══════════════════════════════
 -- gd  → 跳转到定义

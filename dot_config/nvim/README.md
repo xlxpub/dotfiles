@@ -15,6 +15,25 @@
 |---|---|
 | `<leader>fm` | 搜索光标下结构体的所有方法（Go receiver） |
 
+### 🔀 Git 暂存/撤销/提交全流程快捷键
+**文件**：`lua/plugins/editor.lua`、`lua/keymaps.lua`
+
+补全了 gitsigns 的暂存/撤销映射，新增终端内 git commit，不用切出 nvim 即可完成完整 git 工作流。
+
+| 快捷键 | 功能 |
+|---|---|
+| `<leader>hs` | 暂存当前变更块 |
+| `<leader>hS` | 暂存整个文件 |
+| `<leader>hr` | 重置当前变更块（撤销修改） |
+| `<leader>hR` | 重置整个文件（撤销所有修改） |
+| `<leader>hu` | 撤销上次暂存（unstage） |
+| `<leader>hp` | 预览当前变更块 |
+| `<leader>hb` | 查看行 blame |
+| `<leader>hd` | Diff 当前文件 |
+| `<leader>gg` | 打开 lazygit（浮窗，复杂操作用） |
+| `<leader>gc` | Git commit（终端内编辑 message） |
+| `<leader>ga` | Git add all + commit |
+
 ### 🤖 claudecode.nvim 集成 Claude Code
 **文件**：`lua/plugins/claudecode.lua`
 
