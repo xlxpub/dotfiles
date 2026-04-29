@@ -52,7 +52,7 @@ return {
 		opts = {
 			auto_start = true,      -- nvim 启动时自动开启 WebSocket 服务
 			track_selection = true, -- 自动同步选区给 Claude
-			terminal_cmd = "/opt/homebrew/bin/claude-internal", -- 自定义安装路径
+			-- terminal_cmd 不设置，自动从 PATH 查找 claude
 			terminal = {
 				split_side = "right",
 				split_width_percentage = 0.35,

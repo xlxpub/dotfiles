@@ -1,15 +1,15 @@
 procs:
   sailing-retrieval-proxy:
-    cwd: "/Users/leixixue/go/projects/woa/pubtool/app/sailing/cmd/sailing_retrieval_proxy"
+    cwd: "{{ .chezmoi.homeDir }}/go/projects/woa/pubtool/app/sailing/cmd/sailing_retrieval_proxy"
     shell: go run main.go 2>&1 | tee /tmp/sailingproxy.log
     autostart: true
 
   tte-agent:
-    cwd: /Users/leixixue/go/projects/woa/tte_agent
+    cwd: {{ .chezmoi.homeDir }}/go/projects/woa/tte_agent
     shell: go run . 2>&1 |tee /tmp/sailingagent.log
     autostart: true
 
   sailing-verify:
-    cwd: /Users/leixixue/go/projects/woa/sailing-verify
+    cwd: {{ .chezmoi.homeDir }}/go/projects/woa/sailing-verify
     shell: make dev 2>&1 |tee /tmp/sailingverify
     autostart: true
