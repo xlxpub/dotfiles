@@ -189,6 +189,14 @@ return {
       require("luasnip.loaders.from_vscode").lazy_load()
 
       cmp.setup({
+        -- 允许子串匹配（输入 2026 可匹配 vim-2026-04-22）
+        matching = {
+          disallow_fuzzy_matching        = false,
+          disallow_fullfuzzy_matching    = false,
+          disallow_partial_fuzzy_matching = false,
+          disallow_partial_matching      = false,
+          disallow_prefix_unmatching     = false,
+        },
         snippet = {
           expand = function(args) luasnip.lsp_expand(args.body) end,
         },

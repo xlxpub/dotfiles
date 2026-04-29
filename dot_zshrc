@@ -1,3 +1,17 @@
+# 基础 zsh 配置
+# +# iTerm2 窗口标题显示当前目录名
+DISABLE_AUTO_TITLE=true
+setopt prompt_subst
+
+autoload -Uz add-zsh-hook
+_set_iterm_title() {
+  # %1~ = 最后一级目录名，在 $HOME 下显示为 ~
+  # \e]0; 同时设置窗口标题和 tab/图标名（兼容性最好）
+  print -Pn "\e]0;%1~\a"
+}
+add-zsh-hook precmd _set_iterm_title   # 每次显示提示符前
+add-zsh-hook chpwd  _set_iterm_title   # cd 后立即更新（不等下个命令）
+
 # 语言设置
 export LANG=zh_CN.UTF-8
 export LC_ALL=zh_CN.UTF-8

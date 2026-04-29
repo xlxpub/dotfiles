@@ -85,6 +85,31 @@ opt.titleold = ""
 
 文件：`lua/options.lua`
 
+### 🔍 nvim-cmp 启用子串/模糊匹配
+补全菜单默认要求前缀匹配，导致输入 `/tmp/2026` 无法匹配 `vim-2026-04-22` 这类候选项。在 `cmp.setup()` 中添加 `matching` 配置，关闭所有匹配限制，允许子串和模糊匹配。
+
+文件：`lua/plugins/lsp.lua`
+
+### 🔧 修复 treesitter-textobjects 键位不生效（2026-04-29）
+**问题**：`daf`/`vaf`/`]f` 等 treesitter 文本对象键位完全无效。
+
+**根因**（两层）：
+1. **nvim-treesitter v1.0+ 重写了 API**：`setup()` 只接受 `install_dir`，原来的 `ensure_installed`、`highlight`、`indent` 等参数全部被静默忽略，导致 treesitter parser 从未安装，高亮/缩进也未启用
+2. **nvim-treesitter-textobjects v1.0+**：`setup()` 不再读取 `keymaps`/`goto_next_start` 等字段自动注册键位
+
+**修复**：
+- 用新 API 重写 `treesitter.lua`：
+  - `require("nvim-treesitter").install(to_install)` 手动安装 parser
+  - `vim.treesitter.start()` 通过 `FileType` autocmd 启用高亮
+  - `vim.keymap.set` 手动绑定 textobjects 选择/跳转键位
+- 安装系统依赖 `tree-sitter` CLI（编译 parser 必需）：`npm install -g tree-sitter-cli`
+
+**影响的键位**：
+- 文本对象选择：`af/if`（函数）、`ac/ic`（类）、`aa/ia`（参数）
+- 跳转：`]f/[f`（函数间跳转）、`]c/[c`（类间跳转）
+
+文件：`lua/plugins/treesitter.lua`
+
 ### 🔍 JSON 内嵌字段提取预览（je = Json Extract）
 JSON 文件中某个字段的值是转义后的 JSON 或 Markdown 字符串，光标放在该值上按快捷键即可提取、反转义并预览。
 
@@ -295,5 +320,6 @@ brew install stylua
 | `gopls` | Go LSP | `go install golang.org/x/tools/gopls@latest` |
 | `gofumpt` | Go 格式化 | `go install mvdan.cc/gofumpt@latest` |
 | `goimports` | Go import 整理 | `go install golang.org/x/tools/cmd/goimports@latest` |
+| `tree-sitter-cli` | treesitter parser 编译 | `npm install -g tree-sitter-cli` |
 | `lua-language-server` | Lua LSP（可选） | `brew install lua-language-server` |
 

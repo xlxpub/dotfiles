@@ -26,7 +26,7 @@ return {
 					},
 				},
 			})
-			vim.cmd("colorscheme github_dark_dimmed")
+			vim.cmd("colorscheme unokai")
 
 			-- 加载主题后再覆盖 diff 高亮（必须在 colorscheme 之后）
 			local function set_diff_hl()
@@ -66,7 +66,7 @@ return {
 		config = function()
 			require("lualine").setup({
 				options = {
-					theme = "github_dark_dimmed",
+					theme = "auto",
 					component_separators = "|",
 					section_separators = { left = "", right = "" },
 				},
