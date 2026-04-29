@@ -1,0 +1,148 @@
+结合你的配置，从底层到上层逐步解释：
+
+## 一、Lua 的 `require` 机制
+
+```lua
+require("options")
+```
+
+Lua 的 `require` 会按照 **模块搜索路径** 查找文件，规则是把 `.` 替换为 `/`，再加 `.lua` 后缀：
+
+```
+require("options")         → lua/options.lua
+require("keymaps")         → lua/keymaps.lua
+require("lazy-bootstrap")  → lua/lazy-bootstrap.lua
+require("plugins.lsp")     → lua/plugins/lsp.lua
+require("tools.json_md_preview") → lua/tools/json_md_preview.lua
+```
+
+Neovim 的搜索根目录是 `~/.config/nvim/lua/`。
+
+## 二、你的加载链路
+
+```
+nvim 启动
+  │
+  ├── 读取 ~/.config/nvim/init.lua           ← 入口文件（固定位置）
+  │
+  ├── require("options")                      ← lua/options.lua
+  │     └── 设置行号、缩进、搜索等基础选项
+  │
+  ├── require("keymaps")                      ← lua/keymaps.lua
+  │     └── 注册快捷键映射
+  │
+  ├── require("lazy-bootstrap")               ← lua/lazy-bootstrap.lua
+  │     │
+  │     ├── 检查 ~/.local/share/nvim/lazy/lazy.nvim 是否存在
+  │     │   └── 不存在 → git clone 下载
+  │     │
+  │     ├── vim.opt.rtp:prepend(lazypath)
+  │     │   └── 把 lazy.nvim 加入运行时路径，Lua 才能 require 到它
+  │     │
+  │     └── require("lazy").setup("plugins")  ← 关键！
+  │           │
+  │           │  lazy.nvim 扫描 lua/plugins/ 目录
+  │           │  相当于自动执行：
+  │           │    require("plugins.ui")
+  │           │    require("plugins.lsp")
+  │           │    require("plugins.editor")
+  │           │    require("plugins.treesitter")
+  │           │    require("plugins.telescope")
+  │           │
+  │           │  每个文件 return 的表就是插件声明
+  │           │
+  │           ├── plugins/ui.lua  return { {...}, {...}, ... }
+  │           │     └── lazy.nvim 解析每个 {...}：
+  │           │         "projekt0n/github-theme" → 从 GitHub 下载
+  │           │         "nvim-lualine/lualine.nvim" → 从 GitHub 下载
+  │           │         ...
+  │           │
+  │           ├── plugins/lsp.lua  return { {...}, {...}, ... }
+  │           ├── plugins/editor.lua
+  │           ├── plugins/treesitter.lua
+  │           └── plugins/telescope.lua
+  │
+  └── vim.opt.clipboard = 'unnamedplus'
+```
+
+## 三、lazy.nvim 加载单个插件的过程
+
+以 `lsp.lua` 中的 `nvim-lspconfig` 为例：
+
+```lua
+{
+  "neovim/nvim-lspconfig",          -- ① GitHub 仓库地址
+  event = { "BufReadPre", "BufNewFile" },  -- ② 懒加载触发条件
+  dependencies = {                   -- ③ 依赖，先加载
+    "williamboman/mason-lspconfig.nvim",
+    "hrsh7th/cmp-nvim-lsp",
+  },
+  config = function()               -- ④ 加载后执行的配置函数
+    -- 在这里调用插件的 setup()
+  end,
+}
+```
+
+生命周期：
+
+```
+nvim 启动
+  │
+  ├── lazy.nvim 读到这个声明，但 event 是 BufReadPre
+  │   └── 先不加载，等着
+  │
+  ├── 用户打开一个文件（触发 BufReadPre 事件）
+  │   │
+  │   ├── lazy.nvim 先加载 dependencies：
+  │   │   ├── mason.nvim         → require + setup
+  │   │   ├── mason-lspconfig    → require + setup
+  │   │   └── cmp-nvim-lsp       → require
+  │   │
+  │   └── 然后加载 nvim-lspconfig 本体：
+  │       ├── 把插件目录加入 rtp
+  │       │   (~/.local/share/nvim/lazy/nvim-lspconfig/)
+  │       ├── 执行插件自带的 plugin/*.lua
+  │       └── 执行 config = function() ... end
+  │
+  └── LSP 就绑好了，gopls/lua_ls 开始工作
+```
+
+## 四、懒加载触发方式
+
+lazy.nvim 支持多种触发条件，你的配置中用到了：
+
+| 触发方式       | 示例                   | 含义                     |
+| -------------- | ---------------------- | ------------------------ |
+| `event`        | `"BufReadPost"`        | 打开文件时加载           |
+| `cmd`          | `"Mason"`              | 执行 `:Mason` 命令时加载 |
+| `keys`         | `{ "<leader>a", ... }` | 按下快捷键时加载         |
+| `ft`           | `{ "markdown" }`       | 打开特定文件类型时加载   |
+| `lazy = false` | github-theme           | 启动时立即加载           |
+| `dependencies` | —                      | 被依赖时跟着加载         |
+
+## 五、文件目录对应关系总结
+
+```
+~/.config/nvim/
+├── init.lua                    ← nvim 固定入口
+├── lua/
+│   ├── options.lua             ← require("options")
+│   ├── keymaps.lua             ← require("keymaps")
+│   ├── lazy-bootstrap.lua      ← require("lazy-bootstrap")
+│   ├── plugins/                ← lazy.setup("plugins") 自动扫描
+│   │   ├── ui.lua              ← 8 个 UI 插件声明
+│   │   ├── lsp.lua             ← 11 个 LSP/补全插件声明
+│   │   ├── editor.lua          ← 10 个编辑增强插件声明
+│   │   ├── treesitter.lua      ← 2 个语法分析插件声明
+│   │   └── telescope.lua       ← 2 个搜索插件声明
+│   └── tools/                  ← 自定义工具模块
+│       └── json_md_preview.lua ← require("tools.json_md_preview")
+
+~/.local/share/nvim/lazy/       ← 插件实际安装位置（lazy.nvim 管理）
+├── lazy.nvim/                  ← 插件管理器本体
+├── nvim-lspconfig/             ← 每个插件一个目录
+├── nvim-cmp/
+├── ...共 40 个
+```
+
+**一句话**：`init.lua` → `require` 加载 Lua 模块 → `lazy-bootstrap.lua` 初始化 lazy.nvim → lazy.nvim 扫描 `lua/plugins/` 下所有文件 → 按声明的触发条件（event/cmd/keys/ft）懒加载每个插件。
