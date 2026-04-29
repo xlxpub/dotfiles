@@ -6,6 +6,40 @@
 
 ## 📝 最近配置变更（2026-04）
 
+### 🤖 claudecode.nvim 集成 Claude Code
+**文件**：`lua/plugins/claudecode.lua`
+
+将 Claude Code CLI 无缝嵌入 nvim，支持实时上下文同步、diff 审查等。
+
+依赖：`folke/snacks.nvim`（同文件中配置，仅启用 terminal 模块）
+
+| 快捷键 | 功能 |
+|---|---|
+| `<leader>cc` | 开关 Claude Code 面板 |
+| `<leader>cf` | 聚焦 Claude Code 面板 |
+| `<leader>cr` | 恢复上次会话 |
+| `<leader>cb` | 添加当前文件到上下文 |
+| `<leader>cs` | （可视模式）发送选中内容给 Claude |
+| `<leader>cy` | 接受 Claude 的 diff 修改（yes）|
+| `<leader>cn` | 拒绝 Claude 的 diff 修改（no）|
+
+> 注意：`<leader>ca/ci/co` 已被 LSP 占用（Code Action / 调用树），Claude 快捷键跳过这三个。
+
+
+
+### 🗂 JSON 格式化快捷键（jq）
+**文件**：`lua/keymaps.lua`
+
+新增三个快捷键，依赖系统 `jq` 命令：
+
+| 快捷键 | 模式 | 功能 |
+|---|---|---|
+| `<leader>jf` | 普通 | 整个文件格式化（美化多行） |
+| `<leader>jf` | 可视 | 只格式化选中区域 |
+| `<leader>jm` | 普通 | 压缩为单行（minify） |
+
+
+
 ### 🔍 Telescope 改为遵守 .gitignore（修复 `.venv` 无法忽略）
 **问题**：`<leader>ff` 查找文件时把 `.venv/` 下的 Python 虚拟环境文件全列出来了，即使 `.venv` 已加入 `.gitignore` 也没生效。
 

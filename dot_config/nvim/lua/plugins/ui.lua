@@ -157,22 +157,7 @@ return {
 		end,
 	},
 
-	-- ── 开始界面：alpha-nvim ──────────────────────
-	{
-		"goolord/alpha-nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			local dashboard = require("alpha.themes.dashboard")
-			dashboard.section.buttons.val = {
-				dashboard.button("f", "  查找文件", "<cmd>Telescope find_files<cr>"),
-				dashboard.button("r", "  最近文件", "<cmd>Telescope oldfiles<cr>"),
-				dashboard.button("g", "  全文搜索", "<cmd>Telescope live_grep<cr>"),
-				dashboard.button("e", "  文件树", "<cmd>NvimTreeToggle<cr>"),
-				dashboard.button("q", "  退出", "<cmd>qa<cr>"),
-			}
-			require("alpha").setup(dashboard.config)
-		end,
-	},
+	-- ── 开始界面：snacks.dashboard（替换 alpha-nvim）──
 
 	-- ── 缩进线 ────────────────────────────────────
 	{

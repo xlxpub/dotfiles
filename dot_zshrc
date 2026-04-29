@@ -36,10 +36,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # GNU 工具（覆盖 macOS 自带的 BSD 版本）
 path=(
-  /opt/homebrew/opt/findutils/libexec/gnubin
-  /opt/homebrew/opt/gnu-sed/libexec/gnubin
-  /opt/homebrew/opt/grep/libexec/gnubin
-  /opt/homebrew/opt/coreutils/libexec/gnubin
+  #/opt/homebrew/opt/findutils/libexec/gnubin
+  # /opt/homebrew/opt/gnu-sed/libexec/gnubin
+  #/opt/homebrew/opt/grep/libexec/gnubin
+  #/opt/homebrew/opt/coreutils/libexec/gnubin
   $path
 )
 
