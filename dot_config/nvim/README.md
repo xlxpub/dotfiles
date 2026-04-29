@@ -6,6 +6,15 @@
 
 ## 📝 最近配置变更（2026-04）
 
+### 🔍 搜索 Go 结构体的所有方法（跨文件）
+**文件**：`lua/keymaps.lua`
+
+光标放在结构体名称上按 `<leader>fm`，自动用正则 `func \(.*\*?StructName\)` 搜索当前项目中该结构体的所有方法（包括指针 receiver 和值 receiver），Telescope 列出结果。
+
+| 快捷键 | 功能 |
+|---|---|
+| `<leader>fm` | 搜索光标下结构体的所有方法（Go receiver） |
+
 ### 🤖 claudecode.nvim 集成 Claude Code
 **文件**：`lua/plugins/claudecode.lua`
 

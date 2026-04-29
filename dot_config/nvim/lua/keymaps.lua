@@ -66,6 +66,20 @@ map("n", "<leader>fb", "<cmd>Telescope buffers<cr>",     { desc = "搜索 buffer
 map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>",   { desc = "搜索帮助" })
 map("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>",    { desc = "最近文件" })
 
+-- 搜索 Go 结构体的所有方法（光标放在结构体名上按 <leader>fm）
+map("n", "<leader>fm", function()
+  local word = vim.fn.expand("<cword>")
+  if word == "" then
+    vim.notify("光标下没有单词", vim.log.levels.WARN)
+    return
+  end
+  require("telescope.builtin").grep_string({
+    search = "func \\(.*\\*?" .. word .. "\\)",
+    use_regex = true,
+    prompt_title = word .. " 的方法",
+  })
+end, { desc = "搜索结构体方法（Go receiver）" })
+
 -- ══════════════════════════════
 --  LSP 键位（在 lsp.lua 中定义，此处仅备注）
 -- ══════════════════════════════
