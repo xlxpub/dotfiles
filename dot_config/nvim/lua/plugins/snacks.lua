@@ -6,7 +6,13 @@ return {
 		lazy = false,
 		opts = {
 			-- 只启用需要的模块，其余关闭避免干扰现有配置
-			terminal = { enabled = true },
+			terminal = {
+				enabled = true,
+				win = {
+					wo = { winblend = 0 },
+					backdrop = false,  -- 关闭背景遮罩层
+				},
+			},
 			bigfile = { enabled = false },
 			dashboard = {
 				enabled = true,

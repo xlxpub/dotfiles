@@ -14,8 +14,7 @@ local function on_attach(_, bufnr)
   map("n", "gr",  "<cmd>Telescope lsp_references<cr>", "查看引用")
 
   -- 文档（nvim 原生，0.10+ 自带圆角边框 + markdown 渲染）
-  map("n", "K",     vim.lsp.buf.hover,           "悬浮文档")
-  map("n", "<C-k>", vim.lsp.buf.signature_help,  "函数签名")
+  map("n", "K",     vim.lsp.buf.hover,           "悬浮文档（含函数签名）")
 
   -- 重构（nvim 原生）
   map("n", "<leader>rn", vim.lsp.buf.rename,      "重命名")

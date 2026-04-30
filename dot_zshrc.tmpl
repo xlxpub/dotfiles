@@ -123,9 +123,11 @@ zstyle ':completion:*' matcher-list \
   'r:|[._-]=* r:|=*' \
   'l:|=* r:|=*'
 
-# zsh-autosuggestions 自动建议
+# zsh-autosuggestions 自动建议（nvim 内置终端中禁用，避免 execute:xxx 乱码）
 if [[ -f ~/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  source ~/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+  if [[ -z "$NVIM" ]]; then
+    source ~/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+  fi
 fi
 
 # zsh-syntax-highlighting 语法高亮

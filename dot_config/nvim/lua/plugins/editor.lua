@@ -46,33 +46,6 @@ return {
     config = true,
   },
 
-  -- ── Git 集成（行变更标记）─────────────────────
-  {
-    "lewis6991/gitsigns.nvim",
-    event = "BufReadPost",
-    config = function()
-      require("gitsigns").setup({
-        signs = {
-          add    = { text = "▎" },
-          change = { text = "▎" },
-          delete = { text = "" },
-        },
-        on_attach = function(bufnr)
-          local gs = package.loaded.gitsigns
-          local map = function(mode, l, r, desc)
-            vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
-          end
-          map("n", "]h", gs.next_hunk,          "下一个 Git 变更")
-          map("n", "[h", gs.prev_hunk,          "上一个 Git 变更")
-          map("n", "<leader>hs", gs.stage_hunk,  "暂存当前变更块")
-          map("n", "<leader>hr", gs.reset_hunk,  "重置当前变更块")
-          map("n", "<leader>hp", gs.preview_hunk, "预览当前变更块")
-          map("n", "<leader>hb", gs.blame_line,  "查看行 blame")
-        end,
-      })
-    end,
-  },
-
   -- ── 包围符操作（ysw" 给单词加引号等）─────────
   {
     "kylechui/nvim-surround",
@@ -116,14 +89,18 @@ return {
   {
     "gbprod/yanky.nvim",
     event = "VeryLazy",
+    dependencies = { "nvim-telescope/telescope.nvim" },
     config = function()
       require("yanky").setup()
+      require("telescope").load_extension("yank_history")
       -- 替换默认 p/P，自动记录 yank 历史
       vim.keymap.set({ "n", "x" }, "p",    "<Plug>(YankyPutAfter)")
       vim.keymap.set({ "n", "x" }, "P",    "<Plug>(YankyPutBefore)")
       -- 粘贴后按 <C-p>/<C-n> 循环切换历史条目
       vim.keymap.set("n", "<C-p>", "<Plug>(YankyPreviousEntry)")
       vim.keymap.set("n", "<C-n>", "<Plug>(YankyNextEntry)")
+      -- Telescope 打开 yank 历史列表
+      vim.keymap.set("n", "<leader>yh", "<cmd>Telescope yank_history<cr>", { desc = "Yank 历史列表" })
     end,
   },
 
@@ -136,48 +113,14 @@ return {
       -- 注册 leader 分组标签
       require("which-key").add({
         { "<leader>f", group = "查找" },
-        { "<leader>h", group = "Git" },
+        { "<leader>g", group = "Git" },
         { "<leader>x", group = "诊断" },
-        { "<leader>y", group = "Yank 历史" },
-        { "<leader>g", group = "Git 工具" },
+        { "<leader>y", group = "复制" },
         { "<leader>m", group = "Markdown" },
         { "<leader>j", group = "JSON" },
         { "<leader>je", group = "Json Extract" },
-        -- 下面几条是 Vim 内置命令（非 keymap），在 which-key 里补充说明
-        { "]c", desc = "下一个 diff 改动点（diff 模式）/ 下一个 class（普通模式）" },
-        { "[c", desc = "上一个 diff 改动点（diff 模式）/ 上一个 class（普通模式）" },
       })
     end,
   },
 
-  -- ── Git 冲突解决：diffview ─────────────────────
-  {
-    "sindrets/diffview.nvim",
-    dependencies = "nvim-lua/plenary.nvim",
-    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
-    keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "打开冲突查看器" },
-      { "<leader>gD", "<cmd>DiffviewClose<cr>", desc = "关闭冲突查看器" },
-    },
-    config = function()
-      require("diffview").setup({
-        enhanced_diff_hl = true,  -- 增强差异高亮（依赖主题的 DiffAdd/DiffChange 等）
-        use_icons = true,         -- 使用图标
-        -- 字符级 diff：不光整行变色，修改的具体字符也高亮
-        diff_binaries = false,
-        view = {
-          default = { winbar_info = true },
-          merge_tool = {
-            layout = "diff3_mixed",  -- 3-way 合并：OURS | 结果 | THEIRS（更直观）
-            disable_diagnostics = true,
-            winbar_info = true,
-          },
-        },
-      })
-      -- 打开字符级 diff 算法
-      vim.opt.diffopt:append("algorithm:histogram")
-      vim.opt.diffopt:append("indent-heuristic")
-      vim.opt.diffopt:append("linematch:60")  -- 行内字符级匹配
-    end,
-  },
 }
