@@ -48,6 +48,12 @@ return {
         enhanced_diff_hl = true,
         use_icons = true,
         diff_binaries = false,
+        file_panel = {
+          listing_style = "list",
+          win_config = {
+            width = 30,
+          },
+        },
         view = {
           default = { winbar_info = true },
           merge_tool = {
@@ -60,8 +66,7 @@ return {
           -- diff 视图窗口
           view = {
             { "n", "q",  "<cmd>DiffviewClose<cr>", { desc = "关闭 Diffview" } },
-            { "n", "do", actions.diffget,           { desc = "获取对面的改动 (diff obtain)" } },
-            { "n", "dp", actions.diffput,           { desc = "推送改动到对面 (diff put)" } },
+            -- do/dp 不覆盖，使用 vim 原生 :diffget/:diffput
             { "n", "]c", actions.next_conflict,     { desc = "下一个冲突" } },
             { "n", "[c", actions.prev_conflict,     { desc = "上一个冲突" } },
           },

@@ -44,9 +44,15 @@ return {
 		"folke/snacks.nvim",
 		keys = {
 			-- 底部分屏终端（日常跑命令用）
-			{ "<leader>tt", function() Snacks.terminal.toggle() end,          desc = "终端：底部开关" },
+			{ "<leader>tt", function()
+				Snacks.terminal.toggle()
+				vim.cmd("mode")  -- 强制重绘屏幕，清除终端渲染残留
+			end, desc = "终端：底部开关" },
 			-- 浮动终端
-			{ "<leader>tf", function() Snacks.terminal.toggle(nil, { win = { style = "float" } }) end, desc = "终端：浮动开关" },
+			{ "<leader>tf", function()
+				Snacks.terminal.toggle(nil, { win = { style = "float" } })
+				vim.cmd("mode")
+			end, desc = "终端：浮动开关" },
 		},
 	},
 
