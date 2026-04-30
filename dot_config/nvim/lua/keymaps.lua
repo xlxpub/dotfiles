@@ -84,20 +84,31 @@ map("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>",    { desc = "最近文件"
 --  拷贝文件路径 / 行号
 -- ══════════════════════════════
 -- 相对路径（最常用，用于代码 review / 粘贴给别人）
-map("n", "<leader>yp", '<cmd>let @+=expand("%")<cr>',            { desc = "复制：相对路径" })
+map("n", "<leader>pp", '<cmd>let @+=expand("%")<cr>',            { desc = "复制：相对路径" })
 -- 绝对路径
-map("n", "<leader>yP", '<cmd>let @+=expand("%:p")<cr>',          { desc = "复制：绝对路径" })
+map("n", "<leader>pP", '<cmd>let @+=expand("%:p")<cr>',          { desc = "复制：绝对路径" })
 -- 文件名（不含目录）
-map("n", "<leader>yn", '<cmd>let @+=expand("%:t")<cr>',          { desc = "复制：文件名" })
+map("n", "<leader>pn", '<cmd>let @+=expand("%:t")<cr>',          { desc = "复制：文件名" })
 -- 相对路径 + 行号（如 lua/keymaps.lua:42）
-map("n", "<leader>yl", function()
+map("n", "<leader>pl", function()
   vim.fn.setreg("+", vim.fn.expand("%") .. ":" .. vim.fn.line("."))
 end, { desc = "复制：相对路径:行号" })
 -- 函数名（treesitter，光标在函数体内任意位置均有效）
-map("n", "<leader>yf", function()
+-- 复制格式：相对路径:函数名（如 tools/search_schedule.go:SearchSchedule）
+map("n", "<leader>pf", function()
+	local bufnr = vim.api.nvim_get_current_buf()
+	-- 确保 treesitter parser 已启动
+	local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+	if not ok or not parser then
+		vim.notify("treesitter parser 未加载（当前文件类型可能不支持）", vim.log.levels.WARN)
+		return
+	end
+	-- 强制解析一次，确保语法树就绪
+	parser:parse()
+
 	local node = vim.treesitter.get_node()
 	if not node then
-		vim.notify("treesitter 未就绪", vim.log.levels.WARN)
+		vim.notify("无法获取光标处的语法节点", vim.log.levels.WARN)
 		return
 	end
 	local func_types = {
@@ -111,15 +122,16 @@ map("n", "<leader>yf", function()
 			local name_node = cur:field("name")[1]
 			if name_node then
 				local name = vim.treesitter.get_node_text(name_node, 0)
-				vim.fn.setreg("+", name)
-				vim.notify("已复制：" .. name)
+				local result = vim.fn.expand("%") .. ":" .. name
+				vim.fn.setreg("+", result)
+				vim.notify("已复制：" .. result)
 				return
 			end
 		end
 		cur = cur:parent()
 	end
-	vim.notify("未找到函数名", vim.log.levels.WARN)
-end, { desc = "复制：当前函数名" })
+	vim.notify("未找到函数名（光标需在函数体内）", vim.log.levels.WARN)
+end, { desc = "复制：相对路径:函数名" })
 
 
 -- 整个文件格式化

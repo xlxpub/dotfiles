@@ -50,15 +50,15 @@ return {
 
       -- move 跳转：新版不支持在 setup() 里配 keymaps，需手动绑定
       local move = require("nvim-treesitter-textobjects.move")
-      local function bind(key, fn, query)
-        vim.keymap.set({ "n", "o", "x" }, key, function() fn(query) end, { desc = key })
+      local function bind(key, fn, query, desc)
+        vim.keymap.set({ "n", "o", "x" }, key, function() fn(query) end, { desc = desc })
       end
-      bind("]f", move.goto_next_start,     "@function.outer")
-      bind("[f", move.goto_previous_start, "@function.outer")
-      bind("]F", move.goto_next_end,       "@function.outer")
-      bind("[F", move.goto_previous_end,   "@function.outer")
-      bind("]c", move.goto_next_start,     "@class.outer")
-      bind("[c", move.goto_previous_start, "@class.outer")
+      bind("]f", move.goto_next_start,     "@function.outer", "下一个函数开头")
+      bind("[f", move.goto_previous_start, "@function.outer", "上一个函数开头")
+      bind("]F", move.goto_next_end,       "@function.outer", "下一个函数结尾")
+      bind("[F", move.goto_previous_end,   "@function.outer", "上一个函数结尾")
+      bind("]c", move.goto_next_start,     "@class.outer",    "下一个 class")
+      bind("[c", move.goto_previous_start, "@class.outer",    "上一个 class")
     end,
   },
 }

@@ -100,7 +100,7 @@ return {
       vim.keymap.set("n", "<C-p>", "<Plug>(YankyPreviousEntry)")
       vim.keymap.set("n", "<C-n>", "<Plug>(YankyNextEntry)")
       -- Telescope 打开 yank 历史列表
-      vim.keymap.set("n", "<leader>yh", "<cmd>Telescope yank_history<cr>", { desc = "Yank 历史列表" })
+      vim.keymap.set("n", "<leader>ph", "<cmd>Telescope yank_history<cr>", { desc = "Yank 历史列表" })
     end,
   },
 
@@ -115,10 +115,21 @@ return {
         { "<leader>f", group = "查找" },
         { "<leader>g", group = "Git" },
         { "<leader>x", group = "诊断" },
-        { "<leader>y", group = "复制" },
+        { "<leader>p", group = "复制" },
         { "<leader>m", group = "Markdown" },
         { "<leader>j", group = "JSON" },
         { "<leader>je", group = "Json Extract" },
+        -- ] 系列跳转中文描述
+        { "]d", desc = "下一个诊断" },
+        { "[d", desc = "上一个诊断" },
+        { "]h", desc = "下一个 Git 变更" },
+        { "[h", desc = "上一个 Git 变更" },
+        { "]f", desc = "下一个函数开头" },
+        { "[f", desc = "上一个函数开头" },
+        { "]F", desc = "下一个函数结尾" },
+        { "[F", desc = "上一个函数结尾" },
+        { "]c", desc = "下一个 class" },
+        { "[c", desc = "上一个 class" },
       })
     end,
   },

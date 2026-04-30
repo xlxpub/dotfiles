@@ -67,7 +67,7 @@ opt.completeopt = "menu,menuone,noselect"
 
 -- 更新时间（影响 CursorHold 等事件）
 opt.updatetime = 250
-opt.timeoutlen = 500        -- 键位超时时间（ms），三键组合如 <leader>yf 需要足够时间
+opt.timeoutlen = 300        -- 键位超时时间（ms）
 
 -- 鼠标
 opt.mouse = "a"
