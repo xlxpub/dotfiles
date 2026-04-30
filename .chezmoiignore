@@ -1,0 +1,3 @@
+# Claude Code 项目设置会在运行时被自动修改，不需要 chezmoi 管理
+.config/nvim/.claude
+.config/nvim/.claude/**

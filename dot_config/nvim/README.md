@@ -184,3 +184,4 @@ go install golang.org/x/tools/cmd/goimports@latest
 - 新增 JSON 内嵌字段提取预览工具（`<leader>je*`）
 - iTerm2 窗口标题显示当前文件名 / 目录
 - 屏蔽三方插件 deprecated 告警（`vim.deprecate = function() end`）
+- 修复 CursorHold checktime 在命令行窗口（`q:`）中触发 E11 错误：增加 `getcmdwintype()` 判断

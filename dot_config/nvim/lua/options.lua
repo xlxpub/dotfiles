@@ -47,7 +47,8 @@ opt.autoread = true         -- 外部修改时自动重载文件
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
   pattern = "*",
   callback = function()
-    if vim.fn.mode() ~= "c" and vim.fn.bufexists(0) == 1 then
+    -- 排除命令行模式和命令行窗口（q: 打开的窗口 buftype 为 nofile）
+    if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" and vim.fn.bufexists(0) == 1 then
       vim.cmd("checktime")
     end
   end,
