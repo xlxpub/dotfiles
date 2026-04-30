@@ -64,14 +64,10 @@ return {
           end
           map("n", "]h", gs.next_hunk,          "下一个 Git 变更")
           map("n", "[h", gs.prev_hunk,          "上一个 Git 变更")
-          map("n", "<leader>hs", gs.stage_hunk,    "暂存当前变更块")
-          map("n", "<leader>hr", gs.reset_hunk,    "重置当前变更块")
-          map("n", "<leader>hS", gs.stage_buffer,   "暂存整个文件")
-          map("n", "<leader>hR", gs.reset_buffer,   "重置整个文件")
-          map("n", "<leader>hu", gs.undo_stage_hunk, "撤销上次暂存")
-          map("n", "<leader>hp", gs.preview_hunk,   "预览当前变更块")
-          map("n", "<leader>hb", gs.blame_line,     "查看行 blame")
-          map("n", "<leader>hd", gs.diffthis,       "Diff 当前文件")
+          map("n", "<leader>hs", gs.stage_hunk,  "暂存当前变更块")
+          map("n", "<leader>hr", gs.reset_hunk,  "重置当前变更块")
+          map("n", "<leader>hp", gs.preview_hunk, "预览当前变更块")
+          map("n", "<leader>hb", gs.blame_line,  "查看行 blame")
         end,
       })
     end,
