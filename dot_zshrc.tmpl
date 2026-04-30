@@ -55,7 +55,7 @@ path=($HOME/.local/bin $HOME/bin $path)
 {{ if eq .chezmoi.arch "arm64" -}}
 export GOROOT="/usr/local/go"
 {{ else -}}
-export GOROOT="/usr/local/opt/go/libexec"
+export GOROOT="$HOME/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.25.5.darwin-amd64"
 {{ end -}}
 export GOPATH="$HOME/go"
 export GOMODCACHE="$GOPATH/pkg/mod"
