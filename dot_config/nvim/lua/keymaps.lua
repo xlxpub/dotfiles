@@ -159,8 +159,43 @@ map("n", "]x", "/<<<<<<<<cr>", { desc = "跳到下一个冲突块" })
 map("n", "[x", "?<<<<<<<<cr>", { desc = "跳到上一个冲突块" })
 
 -- ══════════════════════════════
---  JSON 格式化（jq）
+--  拷贝文件路径 / 行号
 -- ══════════════════════════════
+-- 相对路径（最常用，用于代码 review / 粘贴给别人）
+map("n", "<leader>yp", '<cmd>let @+=expand("%")<cr>',            { desc = "复制：相对路径" })
+-- 绝对路径
+map("n", "<leader>yP", '<cmd>let @+=expand("%:p")<cr>',          { desc = "复制：绝对路径" })
+-- 文件名（不含目录）
+map("n", "<leader>yn", '<cmd>let @+=expand("%:t")<cr>',          { desc = "复制：文件名" })
+-- 函数名（treesitter，光标在函数体内任意位置均有效）
+map("n", "<leader>yf", function()
+	local node = vim.treesitter.get_node()
+	if not node then
+		vim.notify("treesitter 未就绪", vim.log.levels.WARN)
+		return
+	end
+	local func_types = {
+		function_declaration = true, method_declaration = true,  -- Go / C
+		function_definition  = true, local_function = true,      -- Lua / Python
+		method_definition    = true, arrow_function = true,      -- JS / TS
+	}
+	local cur = node
+	while cur do
+		if func_types[cur:type()] then
+			local name_node = cur:field("name")[1]
+			if name_node then
+				local name = vim.treesitter.get_node_text(name_node, 0)
+				vim.fn.setreg("+", name)
+				vim.notify("已复制：" .. name)
+				return
+			end
+		end
+		cur = cur:parent()
+	end
+	vim.notify("未找到函数名", vim.log.levels.WARN)
+end, { desc = "复制：当前函数名" })
+
+
 -- 整个文件格式化
 map("n", "<leader>jf", "<cmd>%!jq .<cr>", { desc = "JSON 格式化（整个文件）" })
 -- 可视模式：只格式化选中部分
