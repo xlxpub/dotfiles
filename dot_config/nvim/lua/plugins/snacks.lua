@@ -10,7 +10,7 @@ return {
 				enabled = true,
 				win = {
 					wo = { winblend = 0 },
-					backdrop = false,  -- 关闭背景遮罩层
+					backdrop = false, -- 关闭背景遮罩层
 				},
 			},
 			bigfile = { enabled = false },
@@ -21,9 +21,9 @@ return {
 						{ icon = " ", key = "f", desc = "查找文件", action = "<cmd>Telescope find_files<cr>" },
 						{ icon = " ", key = "r", desc = "最近文件", action = "<cmd>Telescope oldfiles<cr>" },
 						{ icon = " ", key = "g", desc = "全文搜索", action = "<cmd>Telescope live_grep<cr>" },
-						{ icon = " ", key = "e", desc = "文件树",   action = "<cmd>NvimTreeToggle<cr>" },
+						{ icon = " ", key = "e", desc = "文件树", action = "<cmd>NvimTreeToggle<cr>" },
 						{ icon = " ", key = "l", desc = "插件管理", action = "<cmd>Lazy<cr>" },
-						{ icon = " ", key = "q", desc = "退出",     action = "<cmd>qa<cr>" },
+						{ icon = " ", key = "q", desc = "退出", action = "<cmd>qa<cr>" },
 					},
 				},
 				sections = {
@@ -44,16 +44,31 @@ return {
 		"folke/snacks.nvim",
 		keys = {
 			-- 底部分屏终端（日常跑命令用）
-			{ "<leader>tt", function()
-				Snacks.terminal.toggle()
-				vim.cmd("mode")  -- 强制重绘屏幕，清除终端渲染残留
-			end, desc = "终端：底部开关" },
+			{
+				"<leader>tt",
+				function()
+					Snacks.terminal.toggle()
+					vim.cmd("mode") -- 强制重绘屏幕，清除终端渲染残留
+				end,
+				desc = "终端：底部开关",
+			},
 			-- 浮动终端
-			{ "<leader>tf", function()
-				Snacks.terminal.toggle(nil, { win = { style = "float" } })
-				vim.cmd("mode")
-			end, desc = "终端：浮动开关" },
+			{
+				"<leader>tf",
+				function()
+					Snacks.terminal.toggle(nil, { win = { style = "float" } })
+					vim.cmd("mode")
+				end,
+				desc = "终端：浮动开关",
+			},
+			{
+				"<C-\\>",
+				function()
+					Snacks.terminal.toggle()
+				end,
+				mode = { "n", "t" },  -- t = TERMINAL 模式
+				desc = "终端：toggle（普通/终端模式均可）",
+			},
 		},
 	},
-
 }

@@ -185,3 +185,5 @@ go install golang.org/x/tools/cmd/goimports@latest
 - iTerm2 窗口标题显示当前文件名 / 目录
 - 屏蔽三方插件 deprecated 告警（`vim.deprecate = function() end`）
 - 修复 CursorHold checktime 在命令行窗口（`q:`）中触发 E11 错误：增加 `getcmdwintype()` 判断
+- lua_ls diagnostics.globals 添加 `Snacks`，消除 snacks.nvim 全局变量误报
+- 修复 `<C-\>` 在 TERMINAL 模式下无法 toggle 终端：为该按键添加 `mode = { "n", "t" }`
