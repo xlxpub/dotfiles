@@ -24,8 +24,10 @@ add-zsh-hook chpwd    _set_iterm_title   # cd 后立即更新
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-setopt HIST_IGNORE_DUPS
-setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_DUPS       # 不记录连续重复命令
+setopt HIST_FIND_NO_DUPS      # 搜索时跳过重复条目
+setopt SHARE_HISTORY          # 多 tab/窗口实时共享历史（执行后立即同步）
+setopt HIST_IGNORE_SPACE      # 命令前加空格则不记录到历史
 
 export FUNCNEST=100
 
@@ -122,6 +124,7 @@ zstyle ':completion:*' matcher-list \
   'm:{a-zA-Z}={A-Za-z}' \
   'r:|[._-]=* r:|=*' \
   'l:|=* r:|=*'
+zstyle ':completion:*' move-cursor end  # 补全后光标自动移到行尾
 
 # zsh-autosuggestions 自动建议（nvim 内置终端中禁用，避免 execute:xxx 乱码）
 if [[ -f ~/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
@@ -189,9 +192,9 @@ bindkey "^[[3~" delete-char                   # Delete 键
 bindkey "^[[H" beginning-of-line              # Home 键 - 行首
 bindkey "^[[F" end-of-line                    # End 键 - 行尾
 
-# 方向键导航
-bindkey "^[[A" up-line-or-history             # 上方向键 - 历史记录向前
-bindkey "^[[B" down-line-or-history           # 下方向键 - 历史记录向后
+# 方向键导航（按前缀搜索历史：输入 ls 再按上箭头，只显示 ls 开头的命令）
+bindkey "^[[A" history-beginning-search-backward  # 上方向键 - 按前缀向前搜索历史
+bindkey "^[[B" history-beginning-search-forward   # 下方向键 - 按前缀向后搜索历史
 bindkey "^[[C" forward-char                   # 右方向键 - 光标向右
 bindkey "^[[D" backward-char                  # 左方向键 - 光标向左
 
