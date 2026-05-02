@@ -205,6 +205,102 @@ local function json_pretty(value, indent)
 	return tostring(value)
 end
 
+-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+--  日志行 JSON 提取
+--
+--  使用场景：日志行中直接嵌入多个 JSON 对象，如：
+--    2026-01-01 ERROR {"id":"1","msg":"xx"} {"reqid":"abc"}
+--  光标放在任意一个 JSON 对象内部，提取该完整 JSON 并格式化预览。
+--
+--  键位：<leader>jel（json extract from log line）
+-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+---扫描字符串，返回所有顶层 {…} 块的 [start, end]（1-based Lua 索引）
+---@param line string
+---@return {s:integer, e:integer}[]
+local function find_json_spans(line)
+	local spans = {}
+	local depth = 0
+	local start_pos = nil
+	local i = 1
+	while i <= #line do
+		local ch = line:sub(i, i)
+		-- 跳过字符串字面量，避免把字符串里的 {} 误判为括号
+		if ch == '"' then
+			i = i + 1
+			while i <= #line do
+				local c = line:sub(i, i)
+				if c == '\\' then
+					i = i + 2 -- 跳过转义字符
+				elseif c == '"' then
+					i = i + 1
+					break
+				else
+					i = i + 1
+				end
+			end
+		elseif ch == '{' then
+			depth = depth + 1
+			if depth == 1 then start_pos = i end
+			i = i + 1
+		elseif ch == '}' then
+			depth = depth - 1
+			if depth == 0 and start_pos then
+				table.insert(spans, { s = start_pos, e = i })
+				start_pos = nil
+			end
+			i = i + 1
+		else
+			i = i + 1
+		end
+	end
+	return spans
+end
+
+---主命令：从日志行提取光标所在的 JSON 对象并格式化预览
+function M.extract_log_json()
+	local line = vim.api.nvim_get_current_line()
+	-- nvim_win_get_cursor 返回 {row(1-based), col(0-based)}，col 是字节偏移
+	local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 转为 1-based
+
+	local spans = find_json_spans(line)
+	if #spans == 0 then
+		vim.notify("当前行未找到 JSON 对象", vim.log.levels.WARN)
+		return
+	end
+
+	-- 找光标落在哪个 span 内
+	local target = nil
+	for _, sp in ipairs(spans) do
+		if col >= sp.s and col <= sp.e then
+			target = sp
+			break
+		end
+	end
+
+	if not target then
+		-- 光标不在任何 JSON 内：提示所有候选，让用户知道行里有什么
+		local hints = {}
+		for idx, sp in ipairs(spans) do
+			table.insert(hints, string.format("  [%d] col %d-%d: %s", idx, sp.s, sp.e,
+				line:sub(sp.s, math.min(sp.e, sp.s + 40)) .. (sp.e - sp.s > 40 and "…" or "")))
+		end
+		vim.notify("光标不在任何 JSON 对象内。行内 JSON 块：\n" .. table.concat(hints, "\n"), vim.log.levels.WARN)
+		return
+	end
+
+	local json_str = line:sub(target.s, target.e)
+	local ok, decoded = pcall(vim.json.decode, json_str)
+	if not ok then
+		vim.notify("提取到的内容不是合法 JSON：\n" .. json_str, vim.log.levels.WARN)
+		return
+	end
+
+	local formatted = json_pretty(decoded)
+	open_in_scratch(formatted, { filetype = "json", buf_name = "[Log JSON]" })
+	vim.notify(string.format("已提取 col %d-%d 的 JSON", target.s, target.e))
+end
+
 ---主命令：提取光标处 JSON 字符串值，尝试解析并格式化为 JSON 预览
 function M.preview_json()
 	local content = get_json_string_at_cursor()

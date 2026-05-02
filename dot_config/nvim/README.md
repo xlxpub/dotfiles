@@ -48,12 +48,14 @@
 | 按键 | 功能 |
 |------|------|
 | `<leader>ff` | 查找文件 |
+| `<leader>fF` | 查找文件（含 gitignored，临时绕过 .gitignore） |
 | `<leader>fg` | 全文搜索（live grep） |
 | `<leader>fb` | 搜索 buffer |
 | `<leader>fr` | 最近文件 |
 | `<leader>fh` | 搜索帮助文档 |
 
-> 遵守 `.gitignore`；隐藏文件可见；`.venv` / `node_modules` 等自动排除
+> 遵守 `.gitignore`；隐藏文件可见；`.venv` / `node_modules` 等自动排除  
+> `<leader>fF` 加 `--no-ignore` 临时搜索 gitignored 文件（仍排除 `.git` / `.idea` / `.vscode`）
 
 ### LSP
 
@@ -187,3 +189,5 @@ go install golang.org/x/tools/cmd/goimports@latest
 - 修复 CursorHold checktime 在命令行窗口（`q:`）中触发 E11 错误：增加 `getcmdwintype()` 判断
 - lua_ls diagnostics.globals 添加 `Snacks`，消除 snacks.nvim 全局变量误报
 - 修复 `<C-\>` 在 TERMINAL 模式下无法 toggle 终端：为该按键添加 `mode = { "n", "t" }`
+- 新增 `<leader>fF`：临时搜索 gitignored 文件（fd 加 `--no-ignore`，仍排除 .git/.idea/.vscode）
+- 修复 `TextYankPost` ANSI 剥离：`reg == ""` 时同时回写 `""` 和 `"+"` 两个寄存器（之前只写 `"+"`，导致粘贴到终端仍含控制字符）；新增剥离 `\r` 和 C1 控制字符，解决 `jq` 等命令行工具解析失败问题

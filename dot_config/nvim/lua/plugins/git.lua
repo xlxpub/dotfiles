@@ -82,6 +82,8 @@ return {
       vim.opt.diffopt:append("algorithm:histogram")
       vim.opt.diffopt:append("indent-heuristic")
       vim.opt.diffopt:append("linematch:60")
+      vim.opt.diffopt:append("followwrap")   -- 长行跟随 wrap 设置换行显示
+      vim.opt.diffopt:append("inline:char") -- 行内字符级高亮（nvim 0.11+）
     end,
   },
 }

@@ -67,4 +67,4 @@ zsh 插件（手动安装在 `~/.local/share/zsh/plugins/`）：
 2. `~/.env` 存放敏感环境变量，**不提交 git**
 3. 模板文件修改后需在两种架构下验证逻辑（用 `chezmoi execute-template` 检查）
 4. nvim 插件锁定文件 `lazy-lock.json` 纳入版本管理以保持两台机器一致
-2026年 4月30日 星期四 14时49分40秒 CST
+5. 所有nvim快捷键都放到 dot_config/nvim/keymap.md,在新增、修改时要同步更新
