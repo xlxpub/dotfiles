@@ -193,8 +193,12 @@ bindkey "^[[H" beginning-of-line              # Home 键 - 行首
 bindkey "^[[F" end-of-line                    # End 键 - 行尾
 
 # 方向键导航（按前缀搜索历史：输入 ls 再按上箭头，只显示 ls 开头的命令）
-bindkey "^[[A" history-beginning-search-backward  # 上方向键 - 按前缀向前搜索历史
-bindkey "^[[B" history-beginning-search-forward   # 下方向键 - 按前缀向后搜索历史
+# 使用 -end 变体：搜索后光标自动移到行尾而不是停在输入前缀末尾
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "^[[A" history-beginning-search-backward-end  # 上方向键 - 按前缀向前搜索历史
+bindkey "^[[B" history-beginning-search-forward-end   # 下方向键 - 按前缀向后搜索历史
 bindkey "^[[C" forward-char                   # 右方向键 - 光标向右
 bindkey "^[[D" backward-char                  # 左方向键 - 光标向左
 

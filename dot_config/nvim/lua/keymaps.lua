@@ -184,6 +184,10 @@ map("n", "<leader>jej", function() require("tools.json_md_preview").preview_json
 	{ desc = "提取 JSON 中的 JSON 字符串（格式化预览）" })
 map("n", "<leader>jel", function() require("tools.json_md_preview").extract_log_json() end,
 	{ desc = "提取日志行中光标所在的 JSON 对象" })
+map("n", "<leader>jey", function() require("tools.json_md_preview").extract_log_json_yank() end,
+	{ desc = "提取日志行 JSON 并复制到系统剪切板" })
+map("n", "<leader>jew", function() require("tools.json_md_preview").extract_log_json_write() end,
+	{ desc = "提取日志行 JSON 并写入外部文件" })
 map("n", "<leader>jem", function() require("tools.json_md_preview").preview() end,
 	{ desc = "提取 JSON 中的 Markdown（buffer 预览）" })
 map("n", "<leader>jeM", function() require("tools.json_md_preview").preview_browser() end,

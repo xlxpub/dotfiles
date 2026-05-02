@@ -257,19 +257,18 @@ local function find_json_spans(line)
 	return spans
 end
 
----主命令：从日志行提取光标所在的 JSON 对象并格式化预览
-function M.extract_log_json()
+---内部辅助：从日志行提取光标处 JSON，返回格式化字符串和 span，失败返回 nil
+---@return string|nil formatted, {s:integer,e:integer}|nil span
+local function _get_log_json_formatted()
 	local line = vim.api.nvim_get_current_line()
-	-- nvim_win_get_cursor 返回 {row(1-based), col(0-based)}，col 是字节偏移
 	local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 转为 1-based
 
 	local spans = find_json_spans(line)
 	if #spans == 0 then
 		vim.notify("当前行未找到 JSON 对象", vim.log.levels.WARN)
-		return
+		return nil, nil
 	end
 
-	-- 找光标落在哪个 span 内
 	local target = nil
 	for _, sp in ipairs(spans) do
 		if col >= sp.s and col <= sp.e then
@@ -279,26 +278,66 @@ function M.extract_log_json()
 	end
 
 	if not target then
-		-- 光标不在任何 JSON 内：提示所有候选，让用户知道行里有什么
 		local hints = {}
 		for idx, sp in ipairs(spans) do
 			table.insert(hints, string.format("  [%d] col %d-%d: %s", idx, sp.s, sp.e,
 				line:sub(sp.s, math.min(sp.e, sp.s + 40)) .. (sp.e - sp.s > 40 and "…" or "")))
 		end
 		vim.notify("光标不在任何 JSON 对象内。行内 JSON 块：\n" .. table.concat(hints, "\n"), vim.log.levels.WARN)
-		return
+		return nil, nil
 	end
 
 	local json_str = line:sub(target.s, target.e)
 	local ok, decoded = pcall(vim.json.decode, json_str)
 	if not ok then
 		vim.notify("提取到的内容不是合法 JSON：\n" .. json_str, vim.log.levels.WARN)
-		return
+		return nil, nil
 	end
 
-	local formatted = json_pretty(decoded)
+	return json_pretty(decoded), target
+end
+
+---主命令：从日志行提取光标所在的 JSON 对象并格式化预览
+function M.extract_log_json()
+	local formatted, target = _get_log_json_formatted()
+	if not formatted or not target then return end
 	open_in_scratch(formatted, { filetype = "json", buf_name = "[Log JSON]" })
 	vim.notify(string.format("已提取 col %d-%d 的 JSON", target.s, target.e))
+end
+
+---主命令：从日志行提取 JSON 并复制到系统剪切板（寄存器 +）
+function M.extract_log_json_yank()
+	local formatted, target = _get_log_json_formatted()
+	if not formatted or not target then return end
+	vim.fn.setreg("+", formatted)   -- 写入系统剪切板
+	vim.notify(string.format("已复制 col %d-%d 的 JSON 到剪切板（%d 字节）",
+		target.s, target.e, #formatted))
+end
+
+---主命令：从日志行提取 JSON 并写入外部文件
+---会弹出输入框让用户确认/修改路径，默认写到 /tmp/extracted.json
+function M.extract_log_json_write()
+	local formatted, target = _get_log_json_formatted()
+	if not formatted or not target then return end
+
+	local default_path = "/tmp/extracted.json"
+	vim.ui.input({ prompt = "写入文件路径: ", default = default_path }, function(path)
+		if not path or path == "" then
+			vim.notify("已取消写入", vim.log.levels.INFO)
+			return
+		end
+		-- 展开 ~ 和环境变量
+		path = vim.fn.expand(path)
+		local f, err = io.open(path, "w")
+		if not f then
+			vim.notify("无法写入文件: " .. (err or path), vim.log.levels.ERROR)
+			return
+		end
+		f:write(formatted)
+		f:write("\n")
+		f:close()
+		vim.notify(string.format("已写入 %s（col %d-%d，%d 字节）", path, target.s, target.e, #formatted))
+	end)
 end
 
 ---主命令：提取光标处 JSON 字符串值，尝试解析并格式化为 JSON 预览

@@ -191,7 +191,9 @@
 | `<leader>jf` | JSON 格式化（整个文件/选区） |
 | `<leader>jm` | JSON 压缩为单行 |
 | `<leader>jej` | 提取嵌套 JSON 字段并格式化预览 |
-| `<leader>jel` | 提取日志行中光标所在的 JSON 对象 |
+| `<leader>jel` | 提取日志行中光标所在的 JSON 对象（预览） |
+| `<leader>jey` | 提取日志行 JSON 并复制到系统剪切板 |
+| `<leader>jew` | 提取日志行 JSON 并写入外部文件（弹框确认路径） |
 | `<leader>jem` | 提取嵌套 Markdown 字段预览 |
 | `<leader>jeM` | 提取嵌套 Markdown 并在浏览器预览 |
 
