@@ -120,7 +120,7 @@
 |--------|------|
 | `<leader>ff` | 查找文件 |
 | `<leader>fF` | 查找文件（含 gitignored） |
-| `<leader>fg` | 全文搜索（live grep） |
+| `<leader>fg` | 全文搜索（支持追加 rg 参数，如 `-g "*.go"` 限定后缀） |
 | `<leader>fG` | 全文搜索（含 gitignored） |
 | `<leader>fb` | 搜索 Buffer |
 | `<leader>fr` | 最近文件 |

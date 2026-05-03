@@ -10,10 +10,12 @@ return {
 				build = "make",
 			},
 			"gbprod/yanky.nvim", -- yank 历史扩展依赖
+			"nvim-telescope/telescope-live-grep-args.nvim", -- 支持在搜索框传 rg 参数
 		},
 		config = function()
 			local telescope = require("telescope")
 			local actions = require("telescope.actions")
+			local lga_actions = require("telescope-live-grep-args.actions")
 
 			telescope.setup({
 				defaults = {
@@ -29,6 +31,32 @@ return {
 							["<C-j>"] = actions.move_selection_next,
 							["<C-k>"] = actions.move_selection_previous,
 							["<Esc>"] = actions.close,
+						},
+					},
+				},
+				extensions = {
+					live_grep_args = {
+						auto_quoting = true, -- 关键词有空格时自动加引号
+						mappings = {
+							i = {
+								-- <C-k> 在关键词两端加引号（用于含空格的词）
+								["<C-k>"] = lga_actions.quote_prompt(),
+								-- <C-i> 追加 --iglob（快速限定文件类型/目录）
+								["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+							},
+						},
+						additional_args = {
+							"--hidden",
+							"--glob=!.git/*",
+							"--glob=!.idea/*",
+							"--glob=!.vscode/*",
+							"--glob=!node_modules/*",
+							"--glob=!.cache/*",
+							"--glob=!dist/*",
+							"--glob=!build/*",
+							"--glob=!.venv/*",
+							"--glob=!venv/*",
+							"--glob=!__pycache__/*",
 						},
 					},
 				},
@@ -103,6 +131,7 @@ return {
 
 			telescope.load_extension("fzf")
 			telescope.load_extension("yank_history") -- 加载 yanky 扩展
+			telescope.load_extension("live_grep_args") -- 加载 live_grep_args 扩展
 
 			-- 用 <leader>y 打开 yank 历史面板
 			vim.keymap.set("n", "<leader>y", "<cmd>Telescope yank_history<cr>", { desc = "Yank 历史" })

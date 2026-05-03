@@ -77,7 +77,7 @@ map("n", "<leader>fF", function()
 		prompt_title = "查找文件（含 gitignored）",
 	})
 end, { desc = "查找文件（含 gitignored）" })
-map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>",   { desc = "全文搜索" })
+map("n", "<leader>fg", "<cmd>Telescope live_grep_args<cr>", { desc = "全文搜索（可追加 rg 参数）" })
 -- 全文搜索（含 gitignored，加 --no-ignore 绕过 .gitignore）
 map("n", "<leader>fG", function()
 	require("telescope.builtin").live_grep({
