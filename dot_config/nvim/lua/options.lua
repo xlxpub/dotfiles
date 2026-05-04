@@ -87,6 +87,25 @@ opt.titleold = ""
 --  修复 gopls 启动时报 "identify GOROOT dir cmd failed"
 --  原因：nvim 从 GUI / 其他启动器启动时未继承 shell 的 Go 环境
 -- ══════════════════════════════
+-- ══════════════════════════════
+--  自动保存（切换 buffer / 失去焦点 / 退出插入模式 时写入磁盘）
+--  仅对普通文件生效，跳过：终端、quickfix、help、nofile 等特殊 buffer
+-- ══════════════════════════════
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged", "BufLeave", "FocusLost" }, {
+  pattern = "*",
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    -- 跳过不可写 / 无文件名 / 特殊 buftype
+    if not vim.bo[buf].modifiable then return end
+    if vim.bo[buf].buftype ~= "" then return end
+    if vim.api.nvim_buf_get_name(buf) == "" then return end
+    if vim.bo[buf].modified then
+      vim.cmd("silent! write")
+    end
+  end,
+  desc = "自动保存文件",
+})
+
 if vim.fn.executable("go") == 1 then
   if not vim.env.GOROOT or vim.env.GOROOT == "" then
     local goroot = vim.fn.trim(vim.fn.system("go env GOROOT"))

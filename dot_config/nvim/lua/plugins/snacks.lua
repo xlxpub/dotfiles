@@ -20,7 +20,7 @@ return {
 					keys = {
 						{ icon = " ", key = "f", desc = "查找文件", action = "<cmd>Telescope find_files<cr>" },
 						{ icon = " ", key = "r", desc = "最近文件", action = "<cmd>Telescope oldfiles<cr>" },
-						{ icon = " ", key = "g", desc = "全文搜索", action = "<cmd>Telescope live_grep<cr>" },
+						{ icon = " ", key = "g", desc = "全文搜索", action = "<cmd>Telescope live_grep_args<cr>" },
 						{ icon = " ", key = "e", desc = "文件树", action = "<cmd>NvimTreeToggle<cr>" },
 						{ icon = " ", key = "l", desc = "插件管理", action = "<cmd>Lazy<cr>" },
 						{ icon = " ", key = "q", desc = "退出", action = "<cmd>qa<cr>" },

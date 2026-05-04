@@ -10,7 +10,7 @@
 ~/.config/nvim/
 ├── init.lua                    # 入口（屏蔽 deprecated 告警）
 ├── lua/
-│   ├── options.lua             # 基础选项、Go 环境注入、外部修改自动重载
+│   ├── options.lua             # 基础选项、Go 环境注入、外部修改自动重载、自动保存
 │   ├── keymaps.lua             # 全局快捷键
 │   ├── lazy-bootstrap.lua      # lazy.nvim 自动安装
 │   ├── plugins/
