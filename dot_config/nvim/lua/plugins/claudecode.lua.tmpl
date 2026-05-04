@@ -57,19 +57,29 @@ return {
     -- Output options
     verbose = "--verbose",   -- Enable verbose logging with full turn-by-turn output
   },
-  -- Keymaps
+  -- Keymaps（toggle 由外部手动注册，实现与 Snacks 终端互斥）
   keymaps = {
     toggle = {
-      normal = "<C-,>",       -- Normal mode keymap for toggling Claude Code, false to disable
-      terminal = "<C-,>",     -- Terminal mode keymap for toggling Claude Code, false to disable
+      normal = false,          -- 禁用内置绑定，由下方 vim.keymap.set 统一管理
+      terminal = false,
       variants = {
-        continue = "<leader>cC", -- Normal mode keymap for Claude Code with continue flag
-        verbose = "<leader>cV",  -- Normal mode keymap for Claude Code with verbose flag
+        continue = "<leader>cC",
+        verbose = "<leader>cV",
       },
     },
-    window_navigation = true, -- Enable window navigation keymaps (<C-h/j/k/l>)
-    scrolling = true,         -- Enable scrolling keymaps (<C-f/b>) for page up/down
+    window_navigation = true,
+    scrolling = true,
   }
 })
+    -- 手动注册 <C-,> toggle，打开 Claude 前先关闭 Snacks 终端
+    vim.keymap.set("n", "<C-,>", function()
+      require("tools.terminal_exclusive").hide_snacks_terminal()
+      require("claude-code").toggle()
+    end, { desc = "Claude Code: Toggle" })
+    vim.keymap.set("t", "<C-,>", function()
+      require("tools.terminal_exclusive").hide_snacks_terminal()
+      vim.cmd([[stopinsert]])
+      require("claude-code").toggle()
+    end, { desc = "Claude Code: Toggle" })
   end
 }

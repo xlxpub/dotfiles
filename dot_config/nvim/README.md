@@ -191,3 +191,8 @@ go install golang.org/x/tools/cmd/goimports@latest
 - 修复 `<C-\>` 在 TERMINAL 模式下无法 toggle 终端：为该按键添加 `mode = { "n", "t" }`
 - 新增 `<leader>fF`：临时搜索 gitignored 文件（fd 加 `--no-ignore`，仍排除 .git/.idea/.vscode）
 - 修复 `TextYankPost` ANSI 剥离：`reg == ""` 时同时回写 `""` 和 `"+"` 两个寄存器（之前只写 `"+"`，导致粘贴到终端仍含控制字符）；新增剥离 `\r` 和 C1 控制字符，解决 `jq` 等命令行工具解析失败问题
+
+## 📝 变更记录（2026-05）
+
+- 新增自动保存：退出插入模式 / 内容变更 / 切 buffer / 失去焦点时自动写入磁盘
+- 终端与 Claude Code 互斥切换：打开终端自动关闭 Claude 浮窗，打开 Claude 自动关闭终端（`tools/terminal_exclusive.lua`）

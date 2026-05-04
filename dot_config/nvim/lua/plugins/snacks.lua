@@ -47,6 +47,8 @@ return {
 			{
 				"<leader>tt",
 				function()
+					-- 打开终端前先关闭 Claude 窗口
+					require("tools.terminal_exclusive").hide_claude()
 					Snacks.terminal.toggle()
 					vim.cmd("mode") -- 强制重绘屏幕，清除终端渲染残留
 				end,
@@ -56,14 +58,18 @@ return {
 			{
 				"<leader>tf",
 				function()
+					-- 打开终端前先关闭 Claude 窗口
+					require("tools.terminal_exclusive").hide_claude()
 					Snacks.terminal.toggle(nil, { win = { style = "float" } })
 					vim.cmd("mode")
 				end,
 				desc = "终端：浮动开关",
 			},
 			{
-				"<C-\\>",
+				"<C-.>",
 				function()
+					-- 打开终端前先关闭 Claude 窗口
+					require("tools.terminal_exclusive").hide_claude()
 					Snacks.terminal.toggle()
 				end,
 				mode = { "n", "t" },  -- t = TERMINAL 模式

@@ -203,9 +203,9 @@
 
 | 快捷键 | 说明 |
 |--------|------|
-| `<leader>tt` | 底部分屏终端 开/关 |
-| `<leader>tf` | 浮动终端 开/关 |
-| `<C-\>` | 终端 toggle（普通/终端模式均可） |
+| `<leader>tt` | 底部分屏终端 开/关（自动关闭 Claude） |
+| `<leader>tf` | 浮动终端 开/关（自动关闭 Claude） |
+| `<C-.>` | 终端 toggle（普通/终端模式均可，自动关闭 Claude） |
 
 ---
 
@@ -223,7 +223,7 @@
 
 | 快捷键 | 说明 |
 |--------|------|
-| `<C-,>` | Claude Code 窗口 toggle |
+| `<C-,>` | Claude Code 窗口 toggle（自动关闭终端） |
 | `<leader>cC` | 继续上次对话（--continue） |
 | `<leader>cV` | 详细日志模式（--verbose） |
 
