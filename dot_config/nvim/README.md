@@ -196,3 +196,4 @@ go install golang.org/x/tools/cmd/goimports@latest
 
 - 新增自动保存：退出插入模式 / 内容变更 / 切 buffer / 失去焦点时自动写入磁盘
 - 终端与 Claude Code 互斥切换：打开终端自动关闭 Claude 浮窗，打开 Claude 自动关闭终端（`tools/terminal_exclusive.lua`）
+- 终端快捷键改回 `<C-\>`（iTerm2 不支持 Ctrl+. / Ctrl+/ 发送）

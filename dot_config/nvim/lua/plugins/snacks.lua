@@ -66,7 +66,7 @@ return {
 				desc = "终端：浮动开关",
 			},
 			{
-				"<C-.>",
+				"<C-\\>",
 				function()
 					-- 打开终端前先关闭 Claude 窗口
 					require("tools.terminal_exclusive").hide_claude()
