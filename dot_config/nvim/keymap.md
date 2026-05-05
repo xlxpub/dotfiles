@@ -166,7 +166,8 @@
 | `<leader>gd` | 打开 Diffview |
 | `<leader>gc` | 关闭 Diffview |
 | `<leader>gf` | 当前文件 Git 历史 |
-| `]c / [c`（Diffview 内）| 下/上一个冲突 |
+| `]x / [x` | 下/上一个冲突（Diffview 默认） |
+| `]c / [c`（Diffview 内）| 下/上一个 diff 块（vim 原生） |
 | `s`（Diffview 文件面板）| Stage/Unstage 文件 |
 
 ---

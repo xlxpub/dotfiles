@@ -66,9 +66,6 @@ return {
           -- diff 视图窗口
           view = {
             { "n", "q",  "<cmd>DiffviewClose<cr>", { desc = "关闭 Diffview" } },
-            -- do/dp 不覆盖，使用 vim 原生 :diffget/:diffput
-            { "n", "]c", actions.next_conflict,     { desc = "下一个冲突" } },
-            { "n", "[c", actions.prev_conflict,     { desc = "上一个冲突" } },
           },
           -- 左侧文件面板
           file_panel = {
