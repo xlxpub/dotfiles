@@ -1,0 +1,33 @@
+Include /Users/leixixue/.colima/ssh_config
+Host *
+  HostKeyAlgorithms +ssh-rsa
+  PubkeyAcceptedKeyTypes +ssh-rsa
+
+Host *.mnet2.com
+  ProxyCommand /Applications/WeTERM.app/Contents/Resources/app/external/corkscrew 127.0.0.1 12679 %h %p
+  ServerAliveInterval 10
+
+
+
+Host 10.238.1.23
+  ProxyCommand /Applications/WeTERM.app/Contents/Resources/app/external/corkscrew 127.0.0.1 12679 %h %p
+  ServerAliveInterval 10
+
+# pac 模式代理
+Host git.woa.com
+  HostName git.woa.com
+  User git
+  Port 22
+  IdentityFile ~/.ssh/id_rsa
+  StrictHostKeyChecking no
+  ProxyCommand /Applications/WeTERM.app/Contents/Resources/app/external/corkscrew 127.0.0.1 12639 %h %p
+  TCPKeepAlive yes
+
+Host github.com
+  HostName github.com
+  User git
+  Port 22
+  IdentityFile ~/.ssh/id_rsa
+  StrictHostKeyChecking no
+  ProxyCommand /Applications/WeTERM.app/Contents/Resources/app/external/corkscrew 127.0.0.1 12639 %h %p
+  TCPKeepAlive yes
