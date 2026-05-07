@@ -59,7 +59,11 @@ return {
             vim.notify("当前文件类型无 treesitter parser，跳转不可用", vim.log.levels.WARN)
             return
           end
-          fn(query)
+          -- pcall 包裹：当文件内无匹配节点时 score 为 nil 会导致插件内部崩溃
+          local success, err = pcall(fn, query)
+          if not success then
+            vim.notify("跳转失败：未找到匹配的文本对象", vim.log.levels.INFO)
+          end
         end, { desc = desc })
       end
       bind("]f", move.goto_next_start,     "@function.outer", "下一个函数开头")
