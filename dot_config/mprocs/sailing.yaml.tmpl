@@ -3,7 +3,7 @@ procs:
     cwd: "{{ .chezmoi.homeDir }}/go/projects/woa/pubtool/app/sailing/cmd/sailing_retrieval_proxy"
     shell: go run main.go 2>&1 | tee /tmp/sailingproxy.log
     autostart: true
-    env：
+    env:
       HTTPS_PROXY: "http://localhost:12639"
 
   tte-agent:
