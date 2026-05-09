@@ -1,0 +1,61 @@
+export MEDIA_COOKIE='{{ .media_cookie }}'
+export SAILING_SIGNATURE={{ .sailing_signature }}
+export SAILING_COOKIE="{{ .sailing_cookie }}"
+
+export PYENV_ROOT=$HOME/.pyenv
+export PYENV_SHELL=zsh
+
+
+# ark model: https://console.volcengine.com/ark
+# 必填，
+# 火山云方舟 ChatModel 的 Endpoint ID
+export ARK_CHAT_MODEL="{{ .ark_chat_model }}"
+# 火山云方舟 向量化模型的 Endpoint ID
+export ARK_EMBEDDING_MODEL="{{ .ark_embedding_model }}"
+# 火山云方舟的 API Key
+export ARK_API_KEY="{{ .ark_api_key }}"
+# added by xlx
+export ARK_BASE_URL="{{ .ark_base_url }}"
+
+# apmplus: https://console.volcengine.com/apmplus-server
+# 下面必填环境变量如果为空，则不开启 apmplus callback
+# APMPlus 的 App Key，必填
+export APMPLUS_APP_KEY="{{ .apmplus_app_key }}"
+# APMPlus 的 Region，选填，不填写时，默认是 cn-beijing
+export APMPLUS_REGION="{{ .apmplus_region }}"
+
+# langfuse: https://cloud.langfuse.com/
+# 下面两个环境变量如果为空，则不开启 langfuse callback
+# Langfuse Project 的 Public Key
+export LANGFUSE_PUBLIC_KEY="{{ .langfuse_public_key }}"
+# Langfuse Project 的 Secret Key。 注意，Secret Key 仅可在被创建时查看一次
+export LANGFUSE_SECRET_KEY="{{ .langfuse_secret_key }}"
+
+# Redis Server 的地址，不填写时，默认是 localhost:6379
+export REDIS_ADDR="{{ .redis_addr }}"
+
+export OLLAMA_EMBED_MODEL="{{ .ollama_embed_model }}"
+export OLLAMA_BASE_URL="{{ .ollama_base_url }}"
+
+export DEEPSEEK_API_KEY="{{ .deepseek_api_key }}"
+export DEEPSEEK_BASE_URL="{{ .deepseek_base_url }}"
+export DEEPSEEK_MODEL="{{ .deepseek_model }}"
+export DEBUG="true"
+
+export OPENAI_API_KEY="{{ .openai_api_key }}"
+export OPENAI_BASE_URL="{{ .openai_base_url }}"
+export OPENAI_MODEL="{{ .openai_model }}"
+export OPENAI_MODEL_NAME="{{ .openai_model_name }}"
+
+export TENCENT_BASE_URL="{{ .tencent_base_url }}"
+export TENCENT_API_KEY="{{ .tencent_api_key }}"
+export TENCENT_MODEL="{{ .tencent_model }}"
+
+export SEMANTIC_JUDGE_BASE_URL="{{ .semantic_judge_base_url }}"
+export SEMANTIC_JUDGE_API_KEY="{{ .semantic_judge_api_key }}"
+export SEMANTIC_JUDGE_MODEL="{{ .semantic_judge_model }}"
+
+# 替换为你的代理地址，例如 Clash/V2Ray 本地端口
+export HTTPS_PROXY={{ .https_proxy }}
+export HTTP_PROXY={{ .http_proxy }}
+export NO_PROXY={{ .no_proxy }}
