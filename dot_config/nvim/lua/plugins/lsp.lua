@@ -188,7 +188,7 @@ return {
         settings = {
           basedpyright = {
             analysis = {
-              typeCheckingMode = "basic",  -- 可选：off / basic / standard / strict
+              typeCheckingMode = "off",  -- 可选：off / basic / standard / strict
               autoSearchPaths = true,
               useLibraryCodeForTypes = true,
               diagnosticMode = "openFilesOnly",
