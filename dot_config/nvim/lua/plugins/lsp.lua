@@ -95,7 +95,7 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed      = { "gopls", "lua_ls" },
+        ensure_installed      = { "gopls", "lua_ls", "basedpyright" },
         automatic_installation = true,
       })
     end,
@@ -118,8 +118,14 @@ return {
 
       -- ── 全局默认：所有 LSP 共享 ──────────
       vim.lsp.config("*", {
-        on_attach    = on_attach,
         capabilities = capabilities,
+      })
+
+      -- ── LspAttach：LSP 附加时绑定键位 ──────
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          on_attach(nil, args.buf)
+        end,
       })
 
       -- ── Go：gopls ────────────────────────
@@ -156,8 +162,43 @@ return {
         },
       })
 
+      -- ── Python：basedpyright ────────────────
+      -- 自动检测项目 venv 路径，使跨 package 跳转生效
+      local function get_python_path(workspace)
+        -- 优先项目内 venv
+        local venvs = { "venv", ".venv" }
+        for _, name in ipairs(venvs) do
+          local path = workspace .. "/" .. name .. "/bin/python"
+          if vim.uv.fs_stat(path) then return path end
+        end
+        -- 其次 VIRTUAL_ENV 环境变量
+        local venv = os.getenv("VIRTUAL_ENV")
+        if venv then return venv .. "/bin/python" end
+        -- 兜底系统 python
+        return vim.fn.exepath("python3") or "python3"
+      end
+
+      vim.lsp.config("basedpyright", {
+        before_init = function(_, config)
+          local python_path = get_python_path(config.root_dir or vim.fn.getcwd())
+          config.settings = config.settings or {}
+          config.settings.python = config.settings.python or {}
+          config.settings.python.pythonPath = python_path
+        end,
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = "basic",  -- 可选：off / basic / standard / strict
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              diagnosticMode = "openFilesOnly",
+            },
+          },
+        },
+      })
+
       -- 启用所有已配置的服务器
-      vim.lsp.enable({ "gopls", "lua_ls" })
+      vim.lsp.enable({ "gopls", "lua_ls", "basedpyright" })
     end,
   },
 
