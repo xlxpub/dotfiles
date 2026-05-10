@@ -95,7 +95,7 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed      = { "gopls", "lua_ls" },
+        ensure_installed      = { "gopls", "lua_ls", "basedpyright" },
         automatic_installation = true,
       })
     end,
@@ -156,8 +156,22 @@ return {
         },
       })
 
+      -- ── Python：basedpyright ────────────────
+      vim.lsp.config("basedpyright", {
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = "standard",  -- 可选：off / basic / standard / strict
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              diagnosticMode = "openFilesOnly",
+            },
+          },
+        },
+      })
+
       -- 启用所有已配置的服务器
-      vim.lsp.enable({ "gopls", "lua_ls" })
+      vim.lsp.enable({ "gopls", "lua_ls", "basedpyright" })
     end,
   },
 

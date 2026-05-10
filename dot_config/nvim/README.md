@@ -199,3 +199,4 @@ go install golang.org/x/tools/cmd/goimports@latest
 - 终端快捷键改回 `<C-\>`（iTerm2 不支持 Ctrl+. / Ctrl+/ 发送）
 - 修复 Diffview 中 `]c`/`[c` 跳转冲突不生效：移除 treesitter 的 diff-mode fallback 逻辑和 Diffview 自定义 `]c`/`[c` 映射，冲突跳转使用 Diffview 默认的 `]x`/`[x`
 - 修复 treesitter-textobjects move 跳转在无匹配节点时崩溃（`score` nil 算术错误）：用 `pcall` 包裹跳转调用，失败时显示友好提示而非抛异常
+- 新增 Python LSP 支持：添加 basedpyright，支持 `gd` 跳转定义、类型检查等
