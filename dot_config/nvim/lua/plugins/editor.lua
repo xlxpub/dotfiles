@@ -39,12 +39,6 @@ return {
     end,
   },
 
-  -- ── 注释：gcc 注释行，gbc 注释块 ─────────────
-  {
-    "numToStr/Comment.nvim",
-    event = "BufReadPost",
-    config = true,
-  },
 
   -- ── 包围符操作（ysw" 给单词加引号等）─────────
   {

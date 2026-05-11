@@ -65,7 +65,8 @@ export GOCACHE="$HOME/Library/Caches/go-build"
 path=($GOROOT/bin $GOPATH/bin $path)
 
 # pyenv
-path=($HOME/.pyenv/shims $path)
+eval "$(pyenv init -)"
+eval "$(pyenv init --path)"
 
 # 其他工具
 path=(

@@ -143,6 +143,7 @@
 | `gt` | 跳转到类型定义 |
 | `gr` | 查看引用 |
 | `K` | 悬浮文档 |
+| `<C-k>` (Insert) | 函数参数提示（Signature Help） |
 | `<leader>rn` | 重命名 |
 | `<leader>ca` | Code Action（普通/选区） |
 | `<leader>ci` | 入调用树 |
@@ -241,12 +242,12 @@
 
 ---
 
-## 十八、注释（Comment.nvim）
+## 十八、注释（Neovim 内置）
 
 | 快捷键 | 说明 |
 |--------|------|
 | `gcc` | 注释/取消注释当前行 |
-| `gbc` | 块注释当前行 |
+| `gc` (Visual) | 注释/取消注释选中区域 |
 | `gc{motion}` | 注释指定 motion 范围 |
 
 ---

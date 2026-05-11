@@ -19,3 +19,19 @@ procs:
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"
+  
+  ysp-mcp:
+    # cmd: ["ysp-mcp"]
+    shell: ysp-mcp > /tmp/ysp-media-mcp.log 2>&1
+    autostart: false
+    env:
+      PORT: "9090"
+      YSP_LOG_LEVEL: "DEBUG"
+
+  ysp-sports-mcp:
+    shell: ysp-sports-mcp > /tmp/ysp-sports-mcp.log 2>&1
+    autostart: false
+    env:
+      PORT: "9091"
+      YSP_LOG_LEVEL: "DEBUG"
+
