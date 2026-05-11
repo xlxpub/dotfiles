@@ -29,6 +29,10 @@ map("n", "<C-u>", "<C-u>zz")
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 
+-- 左右滚动半屏
+map("n", "zh", "zH", { desc = "向左滚动半屏" })
+map("n", "zl", "zL", { desc = "向右滚动半屏" })
+
 -- 窗口切换（不需要 Ctrl-w 前缀）
 map("n", "<C-h>", "<C-w>h", { desc = "切换到左窗口" })
 map("n", "<C-j>", "<C-w>j", { desc = "切换到下窗口" })
