@@ -1,24 +1,27 @@
 procs:
   sailing-retrieval-proxy:
     cwd: "{{ .chezmoi.homeDir }}/go/projects/woa/pubtool/app/sailing/cmd/sailing_retrieval_proxy"
-    shell: go run main.go 2>&1 | tee /tmp/sailingproxy.log
+    shell: go run main.go > /tmp/sailingproxy.log 2>&1 
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"
+      WEB: "http://localhost:8099/web/"
 
   tte-agent:
     cwd: {{ .chezmoi.homeDir }}/go/projects/woa/tte_agent
-    shell: go run . 2>&1 |tee /tmp/sailingagent.log
+    shell: go run . > /tmp/sailingagent.log   2>&1 
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"
+      WEB: "http://localhost:8088/api/tteagent/chat?debug=true&query=孙颖莎"
 
   sailing-verify:
     cwd: {{ .chezmoi.homeDir }}/go/projects/woa/sailing-verify
-    shell: make dev 2>&1 |tee /tmp/sailingverify
+    shell: make dev > /tmp/sailingverify 2>&1 
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"
+      WEB: "http://localhost:3011/"
   
   ysp-mcp:
     # cmd: ["ysp-mcp"]
@@ -27,6 +30,7 @@ procs:
     env:
       PORT: "9090"
       YSP_LOG_LEVEL: "DEBUG"
+      WEB: "http://localhost:9090/mcp"
 
   ysp-sports-mcp:
     shell: ysp-sports-mcp > /tmp/ysp-sports-mcp.log 2>&1
@@ -34,4 +38,5 @@ procs:
     env:
       PORT: "9091"
       YSP_LOG_LEVEL: "DEBUG"
+      WEB: "http://localhost:9091/mcp"
 
