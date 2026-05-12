@@ -17,13 +17,13 @@ return {
       vim.g.mkdp_auto_close = 0
       vim.g.mkdp_theme = "light"
       -- macOS：浏览器默认不会被插件唤起，用 g:mkdp_browserfunc 自定义启动逻辑
-      vim.g.mkdp_browserfunc = "g:Mkdp_browserfunc_default"
+      vim.g.mkdp_browserfunc = "Mkdp_browserfunc_default"
       vim.g.mkdp_echo_preview_url = 1
       vim.g.mkdp_page_title = "「${name}」"
 
       -- 自定义函数：用 macOS 的 `open` 命令打开 URL
       vim.cmd([[
-        function! g:Mkdp_browserfunc_default(url)
+        function! Mkdp_browserfunc_default(url)
           call system('open ' . shellescape(a:url))
         endfunction
       ]])
