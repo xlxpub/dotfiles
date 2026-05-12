@@ -30,6 +30,15 @@ return {
     end,
   },
 
+  -- ── Markdown 缓冲区内渲染 ─────────────────────
+  --   在 nvim 内直接渲染标题、表格、代码块样式
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    config = true,
+  },
+
   -- ── 自动括号配对 ──────────────────────────────
   {
     "windwp/nvim-autopairs",

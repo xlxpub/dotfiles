@@ -207,6 +207,11 @@ return {
 				autojump = false,
 				-- 在 lualine 显示当前符号（可选）
 				lualine_min_width = 10,
+				-- markdown 用 marksman LSP，符号类型是 String（标题），需单独配置
+				filter_kind = {
+					markdown = { "String" },
+					_ = false,  -- 其他文件类型保持默认过滤
+				},
 			})
 			-- 注册 Telescope 扩展
 			require("telescope").load_extension("aerial")

@@ -96,7 +96,7 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed      = { "gopls", "lua_ls", "basedpyright" },
+        ensure_installed      = { "gopls", "lua_ls", "basedpyright", "marksman" },
         automatic_installation = true,
       })
     end,
@@ -199,7 +199,7 @@ return {
       })
 
       -- 启用所有已配置的服务器
-      vim.lsp.enable({ "gopls", "lua_ls", "basedpyright" })
+      vim.lsp.enable({ "gopls", "lua_ls", "basedpyright", "marksman" })
     end,
   },
 
