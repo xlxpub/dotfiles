@@ -1,0 +1,9 @@
+# Ghostty 配置文件
+
+# 快速终端（下拉式）
+# 全局快捷键触发，按下后从屏幕顶部滑出终端
+keybind = global:cmd+grave_accent=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-screen = main
+quick-terminal-animation-duration = 0.2
+quick-terminal-size = 50%
