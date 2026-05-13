@@ -66,6 +66,16 @@ return {
           -- diff 视图窗口
           view = {
             { "n", "q",  "<cmd>DiffviewClose<cr>", { desc = "关闭 Diffview" } },
+            -- 冲突解决快捷键
+            { "n", "gl", actions.conflict_choose("ours"),   { desc = "选择左边（ours）" } },
+            { "n", "gr", actions.conflict_choose("theirs"), { desc = "选择右边（theirs）" } },
+            { "n", "gB", actions.conflict_choose("base"),   { desc = "选择 base" } },
+            { "n", "ga", actions.conflict_choose("all"),    { desc = "选择全部" } },
+            { "n", "gn", actions.conflict_choose("none"),   { desc = "删除冲突标记" } },
+            { "n", "gL", actions.conflict_choose_all("ours"),   { desc = "整个文件选择左边（ours）" } },
+            { "n", "gR", actions.conflict_choose_all("theirs"), { desc = "整个文件选择右边（theirs）" } },
+            { "n", "]x", actions.next_conflict,             { desc = "下一个冲突" } },
+            { "n", "[x", actions.prev_conflict,             { desc = "上一个冲突" } },
           },
           -- 左侧文件面板
           file_panel = {

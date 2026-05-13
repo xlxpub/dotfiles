@@ -169,7 +169,14 @@
 | `<leader>gd` | 打开 Diffview |
 | `<leader>gc` | 关闭 Diffview |
 | `<leader>gf` | 当前文件 Git 历史 |
-| `]x / [x` | 下/上一个冲突（Diffview 默认） |
+| `]x / [x` | 下/上一个冲突 |
+| `gl` | 选择左边（ours） |
+| `gr` | 选择右边（theirs） |
+| `gB` | 选择 base |
+| `ga` | 选择全部（ours + theirs） |
+| `gn` | 删除冲突标记（选 none） |
+| `gL` | 整个文件选择左边（ours） |
+| `gR` | 整个文件选择右边（theirs） |
 | `]c / [c`（Diffview 内）| 下/上一个 diff 块（vim 原生） |
 | `s`（Diffview 文件面板）| Stage/Unstage 文件 |
 

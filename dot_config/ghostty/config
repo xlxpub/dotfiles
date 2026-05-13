@@ -60,8 +60,3 @@ keybind = cmd+shift+enter=toggle_split_zoom
 keybind = cmd+shift+f=toggle_split_zoom
 
 
-# 分屏导航：Ctrl + h/j/k/l 跳转到对应方向的 pane
-keybind = ctrl+h=goto_split:left
-keybind = ctrl+j=goto_split:bottom
-keybind = ctrl+k=goto_split:top
-keybind = ctrl+l=goto_split:right
