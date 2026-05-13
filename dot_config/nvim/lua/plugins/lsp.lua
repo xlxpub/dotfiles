@@ -2,6 +2,9 @@
 --  辅助函数：LSP 附加时绑定键位
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 local function on_attach(_, bufnr)
+  -- diff 窗口（Diffview 中间页面）不绑定 LSP 键位，避免与冲突解决快捷键冲突
+  if vim.wo.diff then return end
+
   local map = function(mode, lhs, rhs, desc)
     vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
   end

@@ -91,6 +91,52 @@ return {
       vim.opt.diffopt:append("linematch:60")
       vim.opt.diffopt:append("followwrap")   -- 长行跟随 wrap 设置换行显示
       vim.opt.diffopt:append("inline:char") -- 行内字符级高亮（nvim 0.11+）
+
+      -- Diffview buffer 打开时注册 which-key 快捷键描述
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "DiffviewFiles", "DiffviewFileHistory", "DiffviewFilePanel" },
+        callback = function(args)
+          local wk_ok, wk = pcall(require, "which-key")
+          if not wk_ok then return end
+          wk.add({
+            { "]x", desc = "下一个冲突", buffer = args.buf },
+            { "[x", desc = "上一个冲突", buffer = args.buf },
+            { "gl", desc = "选择左边（ours）", buffer = args.buf },
+            { "gr", desc = "选择右边（theirs）", buffer = args.buf },
+            { "gB", desc = "选择 base", buffer = args.buf },
+            { "ga", desc = "选择全部", buffer = args.buf },
+            { "gn", desc = "删除冲突标记", buffer = args.buf },
+            { "gL", desc = "整个文件选择左边（ours）", buffer = args.buf },
+            { "gR", desc = "整个文件选择右边（theirs）", buffer = args.buf },
+            { "s", desc = "Stage/Unstage 文件", buffer = args.buf },
+            { "o", desc = "打开 diff", buffer = args.buf },
+            { "q", desc = "关闭 Diffview", buffer = args.buf },
+          })
+        end,
+        desc = "Diffview which-key 快捷键提示",
+      })
+      -- diff buffer（中间窗口）也注册提示
+      vim.api.nvim_create_autocmd("BufEnter", {
+        callback = function(args)
+          if vim.wo.diff then
+            local wk_ok, wk = pcall(require, "which-key")
+            if not wk_ok then return end
+            wk.add({
+              { "]x", desc = "下一个冲突", buffer = args.buf },
+              { "[x", desc = "上一个冲突", buffer = args.buf },
+              { "gl", desc = "选择左边（ours）", buffer = args.buf },
+              { "gr", desc = "选择右边（theirs）", buffer = args.buf },
+              { "gB", desc = "选择 base", buffer = args.buf },
+              { "ga", desc = "选择全部", buffer = args.buf },
+              { "gn", desc = "删除冲突标记", buffer = args.buf },
+              { "gL", desc = "整个文件选择左边（ours）", buffer = args.buf },
+              { "gR", desc = "整个文件选择右边（theirs）", buffer = args.buf },
+              { "q", desc = "关闭 Diffview", buffer = args.buf },
+            })
+          end
+        end,
+        desc = "Diff 窗口 which-key 快捷键提示",
+      })
     end,
   },
 }
