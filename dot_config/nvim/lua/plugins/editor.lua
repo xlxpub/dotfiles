@@ -114,6 +114,14 @@ return {
         { "<leader>m", group = "Markdown" },
         { "<leader>j", group = "JSON" },
         { "<leader>je", group = "Json Extract" },
+        -- Git 快捷键说明
+        { "<leader>gs", desc = "暂存当前变更块" },
+        { "<leader>gr", desc = "重置当前变更块" },
+        { "<leader>gp", desc = "预览当前变更块" },
+        { "<leader>gb", desc = "查看行 blame" },
+        { "<leader>gd", desc = "打开 Diffview" },
+        { "<leader>gc", desc = "关闭 Diffview" },
+        { "<leader>gf", desc = "当前文件 Git 历史" },
         -- ] 系列跳转中文描述
         { "]d", desc = "下一个诊断" },
         { "[d", desc = "上一个诊断" },
@@ -125,6 +133,28 @@ return {
         { "[F", desc = "上一个函数结尾" },
         { "]c", desc = "下一个 class" },
         { "[c", desc = "上一个 class" },
+        { "]x", desc = "下一个冲突" },
+        { "[x", desc = "上一个冲突" },
+      })
+    end,
+  },
+
+  -- ── 输入法自动切换 ────────────────────────────
+  --   离开插入模式 → 自动切换到 ABC 英文
+  --   进入插入模式 → 恢复离开前的输入法（记住上次状态）
+  {
+    "keaising/im-select.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("im_select").setup({
+        -- 默认英文输入法标识（ABC）
+        default_im_select = "com.apple.keylayout.ABC",
+        -- 命令行工具路径（brew 安装）
+        default_command = "im-select",
+        -- 进入插入模式时恢复离开前的输入法
+        set_previous_events = { "InsertEnter" },
+        -- 离开插入模式时切换为英文
+        set_default_events = { "InsertLeave", "BufEnter", "FocusGained", "CmdlineEnter" },
       })
     end,
   },
