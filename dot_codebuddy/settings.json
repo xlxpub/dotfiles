@@ -1,0 +1,52 @@
+{
+  "enabledPlugins": {
+    "pptx@codebuddy-plugins-official": true,
+    "pdf@codebuddy-plugins-official": true,
+    "docx@codebuddy-plugins-official": true,
+    "xlsx@codebuddy-plugins-official": true,
+    "agent-browser@codebuddy-plugins-official": true,
+    "playwright-cli@codebuddy-plugins-official": true,
+    "skills-sec-audit@codebuddy-plugins-official": true,
+    "find-skills@codebuddy-plugins-official": true
+  },
+  "trustedDirectories": [
+    "/private/tmp/vimpractice",
+    "/Users/xueleixi/.local/share/chezmoi",
+    "/Users/xueleixi/pyprojects/ysp",
+    "/Users/xueleixi/go/projects/woa/sailing-verify"
+  ],
+  "model": "gpt-5.5",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmux notify --title '🤖 CodeBuddy 任务完成' --body \"停止原因: $CODEBUDDY_STOP_HOOK_REASON\""
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmux notify --title '💬 CodeBuddy 通知' --body \"$CODEBUDDY_NOTIFICATION\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '\\e]777;notify;CodeBuddy;正在执行 Bash 命令\\a'"
+          }
+        ]
+      }
+    ]
+  }
+}

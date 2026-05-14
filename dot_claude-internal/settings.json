@@ -1,0 +1,78 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit",
+      "EditWindow",
+      "Mcp",
+      "Bash(git *)",
+      "Bash(ls *)",
+      "Bash(pwd)",
+      "Bash(cat *)",
+      "Bash(rm *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(mkdir *)",
+      "Bash(echo *)",
+      "Bash(npm *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(node *)",
+      "Bash(python *)",
+      "Bash(go *)",
+      "Bash(make *)",
+      "Bash(docker *)",
+      "Bash(grep *)",
+      "Bash(find *)",
+      "Bash(sed *)",
+      "Bash(jq *)",
+      "Bash(npx *)",
+      "Bash(tsc *)",
+      "Bash(prettier *)",
+      "Bash(eslint *)",
+      "Bash(bun *)"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "model": "opus",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"\nimport sys, json, os, subprocess\ndata = json.load(sys.stdin)\nsession_id = data.get('session_id', '')\nprojects_dir = os.path.expanduser(os.environ.get('CLAUDE_CONFIG_DIR', os.path.expanduser('~/.claude-internal')) + '/projects')\nimport glob\nmatches = glob.glob(os.path.join(projects_dir, '**', session_id + '.jsonl'), recursive=True)\nprompt = '任务完成'\nif matches:\n    for line in reversed(open(matches[0]).readlines()):\n        try:\n            d = json.loads(line)\n            if d.get('type') == 'user':\n                c = d.get('message', {}).get('content', '')\n                if isinstance(c, str) and '<' not in c and len(c.strip()) > 2:\n                    prompt = c.strip()[:80]\n                    break\n        except: pass\nsubprocess.run(['osascript', '-e', f'display notification \\\"{prompt}\\\" with title \\\"Claude Code 完成 ✅\\\" sound name \\\"Glass\\\"'])\nsubprocess.run(['cmux', 'notify', '--title', 'Claude Code 完成 ✅', '--body', prompt])\nsubprocess.Popen(['say', '-v', 'Meijia', '-r', '170', f'任务完成：{prompt}'])\n\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hud/omc-hud.mjs"
+  },
+  "enabledPlugins": {
+    "claude-code-internal@claude-code-internal-plugins": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "omc": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "editorMode": "vim",
+  "mcpServers": {}
+}
