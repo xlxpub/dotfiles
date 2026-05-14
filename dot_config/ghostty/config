@@ -9,7 +9,7 @@
 font-family = "Maple Mono NF CN"
 font-size = 14
 adjust-cell-height = 2
-
+split-divider-color = "#00FFFF"
 # --- Theme and Colors ---
 theme = Catppuccin Mocha
 
@@ -36,7 +36,7 @@ quick-terminal-position = top
 quick-terminal-screen = mouse
 quick-terminal-autohide = true
 quick-terminal-animation-duration = 0.15
-quick-terminal-size = 50%
+quick-terminal-size = 60%
 keybind = global:cmd+grave_accent=toggle_quick_terminal
 
 # --- Security ---
