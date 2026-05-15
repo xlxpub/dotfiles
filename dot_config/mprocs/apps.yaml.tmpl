@@ -1,7 +1,7 @@
 procs:
   sailing-retrieval-proxy:
     cwd: "{{ .chezmoi.homeDir }}/go/projects/woa/pubtool/app/sailing/cmd/sailing_retrieval_proxy"
-    shell: go run main.go > /tmp/sailingproxy.log 2>&1 
+    shell: go run main.go > /tmp/sailingproxy.log
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"
@@ -9,7 +9,7 @@ procs:
 
   tte-agent:
     cwd: {{ .chezmoi.homeDir }}/go/projects/woa/tte_agent
-    shell: go run . > /tmp/sailingagent.log   2>&1 
+    shell: go run . 
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"
@@ -17,7 +17,7 @@ procs:
 
   sailing-verify:
     cwd: {{ .chezmoi.homeDir }}/go/projects/woa/sailing-verify
-    shell: make dev > /tmp/sailingverify 2>&1 
+    shell: make dev > /tmp/sailingverify.log
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"

@@ -9,7 +9,9 @@
 font-family = "Maple Mono NF CN"
 font-size = 14
 adjust-cell-height = 2
-split-divider-color = "#00FFFF"
+# pane分割线的颜色
+split-divider-color = "#e6ffed"
+
 # --- Theme and Colors ---
 theme = Catppuccin Mocha
 
