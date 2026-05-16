@@ -101,8 +101,10 @@ export PATH
 # zoxide 初始化（快速目录导航）
 eval "$(zoxide init zsh)"
 
-# Starship 提示符初始化
-eval "$(starship init zsh)"
+# Starship 提示符初始化（防止重复 source 时递归 wrap zle-keymap-select）
+if [[ -z "$STARSHIP_SESSION_KEY" ]]; then
+  eval "$(starship init zsh)"
+fi
 
 # zsh-completions 补全增强（必须在 compinit 之前加入 fpath）
 if [[ -d ~/.local/share/zsh/plugins/zsh-completions/src ]]; then
@@ -206,7 +208,14 @@ bindkey "^[[D" backward-char                  # 左方向键 - 光标向左
 # Vi 模式下的快捷键
 bindkey -M viins '^A' beginning-of-line       # Ctrl+A - 插入模式下跳到行首
 bindkey -M viins '^E' end-of-line             # Ctrl+E - 插入模式下跳到行尾
+bindkey -M viins '^K' kill-line               # Ctrl+K - 删除光标到行尾
+bindkey -M viins '^U' backward-kill-line      # Ctrl+U - 删除光标到行首
 bindkey -M viins "jj" vi-cmd-mode             # jj - 快速从插入模式进入命令模式
+
+# Vi 命令模式下按 v 打开编辑器编辑当前命令
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'v' edit-command-line
 
 if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local

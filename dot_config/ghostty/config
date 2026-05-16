@@ -39,7 +39,7 @@ quick-terminal-screen = mouse
 quick-terminal-autohide = true
 quick-terminal-animation-duration = 0.15
 quick-terminal-size = 60%
-keybind = global:cmd+grave_accent=toggle_quick_terminal
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
 
 # --- Security ---
 clipboard-paste-protection = true
