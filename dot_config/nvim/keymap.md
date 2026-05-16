@@ -143,7 +143,9 @@
 | `gD` | 跳转到声明 |
 | `gi` | 跳转到实现 |
 | `gt` | 跳转到类型定义 |
-| `gr` | 查看引用 |
+| `grr` | 查看引用（nvim 内置） |
+| `grn` | 重命名（nvim 内置） |
+| `gra` | Code Action（nvim 内置） |
 | `K` | 悬浮文档 |
 | `<C-k>` (Insert) | 函数参数提示（Signature Help） |
 | `<leader>rn` | 重命名 |

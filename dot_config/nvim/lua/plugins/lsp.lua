@@ -14,7 +14,7 @@ local function on_attach(_, bufnr)
   map("n", "gD",  vim.lsp.buf.declaration,     "跳转到声明")
   map("n", "gi",  vim.lsp.buf.implementation,  "跳转到实现")
   map("n", "gt",  vim.lsp.buf.type_definition, "跳转到类型定义")
-  map("n", "gr",  "<cmd>Telescope lsp_references<cr>", "查看引用")
+  -- gr 系列使用 nvim 0.11+ 内置映射：grr=引用 grn=重命名 gra=Code Action
 
   -- 文档（nvim 原生，0.10+ 自带圆角边框 + markdown 渲染）
   map("n", "K",     vim.lsp.buf.hover,           "悬浮文档（含函数签名）")
