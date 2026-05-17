@@ -1,7 +1,7 @@
 procs:
   sailing-retrieval-proxy:
     cwd: "{{ .chezmoi.homeDir }}/go/projects/woa/pubtool/app/sailing/cmd/sailing_retrieval_proxy"
-    shell: go run main.go > /tmp/sailingproxy.log
+    shell: GOMAXPROCS=2 go run main.go > /tmp/sailingproxy.log
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"
