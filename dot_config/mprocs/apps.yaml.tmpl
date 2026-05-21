@@ -17,7 +17,7 @@ procs:
 
   sailing-verify:
     cwd: {{ .chezmoi.homeDir }}/go/projects/woa/sailing-verify
-    shell: make dev > /tmp/sailingverify.log
+    shell: make dev >> /tmp/sailingverify.log
     autostart: true
     env:
       HTTPS_PROXY: "http://localhost:12639"
