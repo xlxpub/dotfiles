@@ -29,8 +29,8 @@ opt.wrap = false            -- 不自动换行
 opt.foldmethod = "indent"   -- 用缩进折叠（更稳定）
 opt.foldlevel = 99          -- 默认打开所有折叠
 
--- 系统剪贴板（macOS）
-opt.clipboard = "unnamedplus"
+-- 剪贴板：不自动同步系统剪贴板，通过 <leader>y/p 手动交互
+-- 避免 d/c/x 等操作污染系统剪贴板
 
 -- 分割窗口方向
 opt.splitbelow = true

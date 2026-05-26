@@ -27,3 +27,4 @@ chezmoi 管理的 dotfiles 仓库，支持 Intel x86_64 和 Apple Silicon arm64 
 
 - 2026-05-09: 将 `~/.env` 改为 chezmoi 模板管理，敏感值存入 `chezmoi.toml`
 - 2026-05-12: 添加 Ghostty 终端配置，启用下拉式快速终端（`Cmd + `` 触发）
+- 2026-05-26: Neovim 剪贴板改为手动同步模式，移除 `clipboard=unnamedplus`，新增 `<leader>s{y/p}` 系列快捷键与系统剪贴板交互

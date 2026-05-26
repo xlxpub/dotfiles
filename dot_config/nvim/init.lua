@@ -6,4 +6,3 @@ vim.deprecate = function() end
 require("options")
 require("keymaps")
 require("lazy-bootstrap")
-vim.opt.clipboard = 'unnamedplus' -- 核心：默认y同步到系统剪切板
