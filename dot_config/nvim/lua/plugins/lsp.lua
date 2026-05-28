@@ -183,6 +183,14 @@ return {
       end
 
       vim.lsp.config("basedpyright", {
+        root_markers = {
+          "pyproject.toml",
+          "setup.py",
+          "setup.cfg",
+          "requirements.txt",
+          "pyrightconfig.json",
+          ".git",
+        },
         before_init = function(_, config)
           local python_path = get_python_path(config.root_dir or vim.fn.getcwd())
           config.settings = config.settings or {}
