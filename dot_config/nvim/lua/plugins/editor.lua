@@ -154,7 +154,7 @@ return {
         -- 进入插入模式时恢复离开前的输入法
         set_previous_events = { "InsertEnter" },
         -- 离开插入模式时切换为英文
-        set_default_events = { "InsertLeave", "BufEnter", "FocusGained", "CmdlineEnter" },
+        set_default_events = { "InsertLeave", "BufEnter", "FocusGained" },
       })
     end,
   },
