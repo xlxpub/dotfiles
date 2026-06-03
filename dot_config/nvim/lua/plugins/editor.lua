@@ -147,14 +147,14 @@ return {
     event = "VeryLazy",
     config = function()
       require("im_select").setup({
-        -- 默认英文输入法标识（ABC）
-        default_im_select = "com.apple.keylayout.ABC",
+        -- 默认输入法标识（搜狗拼音）—— 任何情况下都强制切到搜狗
+        default_im_select = "com.sogou.inputmethod.sogou.pinyin",
         -- 命令行工具路径（brew 安装）
         default_command = "im-select",
-        -- 进入插入模式时恢复离开前的输入法
-        set_previous_events = { "InsertEnter" },
-        -- 离开插入模式时切换为英文
-        set_default_events = { "InsertLeave", "BufEnter", "FocusGained" },
+        -- 不需要"恢复上次输入法"，因为始终用搜狗
+        set_previous_events = {},
+        -- 进入/离开任何模式都切换为搜狗
+        set_default_events = { "InsertEnter", "InsertLeave", "BufEnter", "FocusGained" },
       })
     end,
   },

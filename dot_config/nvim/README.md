@@ -202,3 +202,4 @@ go install golang.org/x/tools/cmd/goimports@latest
 - 新增 Python LSP 支持：添加 basedpyright，支持 `gd` 跳转定义、类型检查等
 - which-key 新增 Git 快捷键说明（`<leader>gs/gr/gp/gb/gd/gc/gf`）及冲突跳转（`]x`/`[x`）描述
 - 新增输入法自动切换（im-select.nvim）：离开插入模式 / 进入命令行模式自动切换到 ABC 英文；依赖 `brew tap daipeihust/tap && brew install im-select`
+- 调整 im-select：默认输入法改为搜狗拼音（`com.sogou.inputmethod.sogou.pinyin`），任何模式切换都强制切到搜狗，去掉底行模式自动切英文的行为
