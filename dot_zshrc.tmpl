@@ -234,3 +234,6 @@ blackbg(){
   printf '\e]10;#ffffff\a'   # 前景色
   printf '\e]11;#000000\a'   # 背景色
 }
+
+# bsd sed 提取reqBody
+alias liuer_reqbody="sed -E 's/.*reqBody:([^{]*\{.*\}).*respBody:.*/\1/'"
