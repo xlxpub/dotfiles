@@ -237,4 +237,4 @@ blackbg(){
 
 # bsd sed 提取reqBody
 alias liuer_reqbody="sed -E 's/.*reqBody:([^{]*\{.*\}).*respBody:.*/\1/'"
-alias liuer_respbody="sed 's/.*respBody://'|sed 's/\.Cost.*$//'"
+alias liuer_respbody="sed 's/.*respBody://'|sed 's/\.Cost.*$//; s/折叠//'"
