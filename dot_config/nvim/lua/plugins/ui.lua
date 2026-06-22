@@ -90,7 +90,36 @@ return {
 			-- 禁用 netrw（nvim-tree 替代它）
 			vim.g.loaded_netrw = 1
 			vim.g.loaded_netrwPlugin = 1
+			-- 将默认的 S（search_node：当前层级、精确查找）改为
+			-- 以光标所在节点目录为根的 telescope 递归模糊查找。
+			-- 这样输入 conf 即可匹配任意深度的 config（递归 + 子串匹配）。
+			local function on_attach(bufnr)
+				local api = require("nvim-tree.api")
+				-- 先套用默认键位
+				api.config.mappings.default_on_attach(bufnr)
+				local function opts(desc)
+					return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+				end
+				-- S：以光标所在节点目录为根，递归查找文件
+				vim.keymap.set("n", "S", function()
+					local node = api.tree.get_node_under_cursor()
+					-- 目录用自身路径，文件用其父目录；无节点时回退到树的根目录
+					local cwd
+					if node and node.type == "directory" then
+						cwd = node.absolute_path
+					elseif node and node.parent then
+						cwd = node.parent.absolute_path
+					else
+						cwd = api.tree.get_nodes().absolute_path
+					end
+					require("telescope.builtin").find_files({
+						cwd = cwd,
+						prompt_title = "递归查找: " .. vim.fn.fnamemodify(cwd, ":~"),
+					})
+				end, opts("递归查找(以光标目录为根)"))
+			end
 			require("nvim-tree").setup({
+				on_attach = on_attach,
 				view = { width = 30 },
 				renderer = {
 					group_empty = true, -- 空目录合并显示
@@ -126,6 +155,9 @@ return {
 				filters = {
 					dotfiles = false, -- 显示隐藏文件
 					custom = { "^.git$" }, -- 只过滤 .git（不过滤 .omc）
+				},
+				live_filter = {
+					always_show_folders = false, -- 过滤时不显示无匹配项的文件夹
 				},
 				-- 自动跟随当前文件：切换 buffer 时文件树自动定位
 				update_focused_file = {
