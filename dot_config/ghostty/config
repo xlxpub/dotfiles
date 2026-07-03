@@ -16,7 +16,7 @@ split-divider-color = "#e6ffed"
 theme = Catppuccin Mocha
 
 # --- Window and Appearance ---
-background-opacity = 0.70
+background-opacity = 0.85
 background-blur-radius = 30
 macos-titlebar-style = transparent
 window-padding-x = 10
