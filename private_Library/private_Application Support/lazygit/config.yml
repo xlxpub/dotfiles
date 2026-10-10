@@ -1,0 +1,40 @@
+# Lazygit 主配置（XDG 路径，lazygit 会优先读取此文件）
+# 主题通过别名 lgs 加载：--use-config-file ~/.config/lazygit-theme/themes-mergable/frappe/sky.yml
+
+# ── Git 行为 ───────────────────────────────
+git:
+  autoFetch: true           # 定期自动 fetch
+  autoRefresh: true
+  fetchAll: true
+  # 自定义 diff 渲染器，用 '|' / '\' 切换
+  diffRenderers:
+    - type: rawGit
+      name: line-diff
+      args: []
+    - type: rawGit
+      name: word-char-diff
+      args: ["--color-words"]
+
+# ── 编辑器与外部命令 ───────────────────────
+os:
+  # 让 lazygit 编辑文件时复用当前 nvim 实例（配合 lazygit.nvim 使用）
+  editPreset: "nvim"
+
+# ── 通用界面 ───────────────────────────────
+gui:
+  nerdFontsVersion: "3"     # 使用 nerd font 图标
+  showFileTree: true        # 文件树分组模式（按目录折叠，区分 tracked / untracked）
+  showRootItemInFileTree: true  # 文件树显示根节点，分组归属更清晰
+  showRandomTip: false
+  showCommandLog: true
+  scrollHeight: 2
+  commitLength:
+    show: true
+
+# ── 键位 ───────────────────────────────────
+keybinding:
+  universal:
+    quit: "q"
+    return: "<esc>"
+    cycleDiffRenderers: '|'          # 正序切换 diff 渲染器
+    cycleDiffRenderersReverse: '\'   # 逆序切换 diff 渲染器

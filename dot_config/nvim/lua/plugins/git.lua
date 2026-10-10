@@ -14,21 +14,69 @@ return {
           change = { text = "▎" },
           delete = { text = "" },
         },
+        -- 光标所在行的行内 blame（常驻显示在行尾，可随时编辑）
+        current_line_blame = true,
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = "eol",     -- 显示在行尾
+          delay = 400,               -- 光标停留 400ms 后显示
+          ignore_whitespace = false,
+        },
+        current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
           local map = function(mode, l, r, desc)
             vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
           end
           -- hunk 跳转
-          map("n", "]h", gs.next_hunk,           "下一个 Git 变更")
-          map("n", "[h", gs.prev_hunk,           "上一个 Git 变更")
+          map("n", "]h", gs.next_hunk,           "[Git] 下一个变更块")
+          map("n", "[h", gs.prev_hunk,           "[Git] 上一个变更块")
           -- hunk 操作（统一 <leader>g 前缀）
-          map("n", "<leader>gs", gs.stage_hunk,   "暂存当前变更块")
-          map("n", "<leader>gr", gs.reset_hunk,   "重置当前变更块")
-          map("n", "<leader>gp", gs.preview_hunk, "预览当前变更块")
-          map("n", "<leader>gb", gs.blame_line,   "查看行 blame")
+          map("n", "<leader>gs", gs.stage_hunk,   "[Git] 暂存当前变更块")
+          map("n", "<leader>gr", gs.reset_hunk,   "[Git] 重置当前变更块")
+          map("n", "<leader>gp", gs.preview_hunk, "[Git] 预览当前变更块")
+          map("n", "<leader>gb", gs.blame_line,   "[Git] 查看行 blame（弹窗）")
+          -- 变更块范围操作与整文件操作
+          map("n", "<leader>gS", gs.stage_buffer, "[Git] 暂存整个文件")
+          map("n", "<leader>gR", function() gs.reset_buffer() end, "[Git] 重置整个文件")
+          map("n", "<leader>gu", gs.undo_stage_hunk, "[Git] 撤销暂存当前变更块")
+          -- 可视化模式下对选中范围操作
+          map("v", "<leader>gs", function() gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, "[Git] 暂存选中变更块")
+          map("v", "<leader>gr", function() gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, "[Git] 重置选中变更块")
+          -- 行内 blame 开关（gitsigns 自带常驻显示，这里手动切换）
+          map("n", "<leader>tb", gs.toggle_current_line_blame, "[Git] 切换行内 blame")
+          -- 查看当前行 diff 文本
+          map("n", "<leader>td", gs.diffthis, "[Git] 查看当前文件 diff")
         end,
       })
+    end,
+  },
+
+  -- ── Lazygit：终端 TUI，复用当前 nvim 实例打开文件 ──
+  {
+    "kdheepak/lazygit.nvim",
+    cmd = { "LazyGit", "LazyGitCurrentFile", "LazyGitFilter", "LazyGitFilterCurrentFile" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      { "<leader>gg", "<cmd>LazyGit<cr>",                 desc = "[Git] 打开 Lazygit" },
+      { "<leader>gG", "<cmd>LazyGitCurrentFile<cr>",      desc = "[Git] Lazygit（当前文件）" },
+      { "<leader>gl", "<cmd>LazyGitFilter<cr>",           desc = "[Git] Lazygit 查看提交日志" },
+    },
+    config = function()
+      -- 让 lazygit 在退出后用当前 nvim 实例打开被编辑的文件（而非新起进程）
+      vim.g.lazygit_floating_window_scaling_factor = 0.9
+      vim.g.lazygit_floating_window_winblend = 0
+      vim.g.lazygit_use_neovim_remote = 1  -- 关键：回跳当前 nvim，且能跳到具体行
+
+      -- which-key 归类（如果装了 which-key）
+      local wk_ok, wk = pcall(require, "which-key")
+      if wk_ok then
+        wk.add({
+          { "<leader>gg", desc = "[Git] 打开 Lazygit" },
+          { "<leader>gG", desc = "[Git] Lazygit（当前文件）" },
+          { "<leader>gl", desc = "[Git] Lazygit 查看提交日志" },
+        })
+      end
     end,
   },
 
