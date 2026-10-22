@@ -121,7 +121,7 @@ return {
         { "<leader>gb", desc = "查看行 blame" },
         { "<leader>gd", desc = "打开 Diffview" },
         { "<leader>gc", desc = "关闭 Diffview" },
-        { "<leader>gf", desc = "当前文件 Git 历史" },
+        { "<leader>gf", desc = "Lazygit（当前文件）" },
         -- ] 系列跳转中文描述
         { "]d", desc = "下一个诊断" },
         { "[d", desc = "上一个诊断" },

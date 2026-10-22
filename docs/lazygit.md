@@ -6,10 +6,12 @@
 
 | 键位 | 功能 |
 | --- | --- |
-| `<leader>gg` | 下方普通分屏打开 Lazygit（高度约 35%） |
-| `<leader>gF` | 浮窗打开 Lazygit（默认 90% 屏幕，圆角边框） |
-| `<leader>gG` | 分屏 + 只看当前文件（`-f`） |
+| `<leader>gg` | 下方普通分屏打开 Lazygit（高度约 75%） |
+| `<leader>gf` | 分屏 + 只看当前文件（`-f`） |
 | `<leader>gl` | 分屏 + 提交日志（`lazygit log`） |
+
+> 浮窗模式（`M.float()`）仍保留在 `lua/tools/lazygit.lua`，但已无默认键位，
+> 可手动执行 `:lua require("tools.lazygit").float()` 打开。
 
 浮窗尺寸可调：`vim.g.lazygit_floating_window_scaling_factor`（默认 0.9）、
 `vim.g.lazygit_floating_window_winblend`、`vim.g.lazygit_floating_window_border_chars`，
@@ -42,7 +44,7 @@ lazygit 自己占了底部 35%，配合 `splitbelow=true`，`:split` 出来的�
 
 ## 验证
 
-1. `<leader>gg` / `<leader>gF` → 分屏或浮窗出现，lazygit 可用
+1. `<leader>gg` → 分屏出现，lazygit 可用
 2. 选中文件按 `e` → 新 tab 全屏打开，lazygit 暂停等待
 3. `:q` → 回到原 tab；浮窗模式下按 `q` 退出 lazygit 后浮窗自动关闭
 

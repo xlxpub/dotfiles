@@ -58,11 +58,12 @@ return {
   -- ── Diffview：全局 diff 视图 + 冲突解决 ───────
   {
     "sindrets/diffview.nvim",
-    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewToggleFiles" },
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles" },
     keys = {
       { "<leader>gd", "<cmd>DiffviewOpen<cr>",              desc = "打开 Diffview" },
       { "<leader>gc", "<cmd>DiffviewClose<cr>",             desc = "关闭 Diffview" },
-      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>",     desc = "当前文件 Git 历史" },
+      { "<leader>gf", function() require("tools.lazygit").open({ "-f", vim.fn.shellescape(vim.fn.expand("%")) }) end,
+        desc = "[Git] Lazygit（当前文件）" },
     },
     config = function()
       local actions = require("diffview.actions")

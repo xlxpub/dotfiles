@@ -216,9 +216,5 @@ end
 
 map("n", "<leader>gg", function() lazygit() end,
 	{ desc = "[Git] Lazygit（分屏）" })
-map("n", "<leader>gG", function() lazygit({ "-f", vim.fn.shellescape(vim.fn.expand("%")) }) end,
-	{ desc = "[Git] Lazygit（当前文件）" })
 map("n", "<leader>gl", function() lazygit({ "log" }) end,
 	{ desc = "[Git] Lazygit 提交日志" })
-map("n", "<leader>gF", function() require("tools.lazygit").float() end,
-	{ desc = "[Git] Lazygit（浮窗）" })
