@@ -52,33 +52,7 @@ return {
     end,
   },
 
-  -- ── Lazygit：终端 TUI，复用当前 nvim 实例打开文件 ──
-  {
-    "kdheepak/lazygit.nvim",
-    cmd = { "LazyGit", "LazyGitCurrentFile", "LazyGitFilter", "LazyGitFilterCurrentFile" },
-    dependencies = { "nvim-lua/plenary.nvim" },
-    keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>",                 desc = "[Git] 打开 Lazygit" },
-      { "<leader>gG", "<cmd>LazyGitCurrentFile<cr>",      desc = "[Git] Lazygit（当前文件）" },
-      { "<leader>gl", "<cmd>LazyGitFilter<cr>",           desc = "[Git] Lazygit 查看提交日志" },
-    },
-    config = function()
-      -- 让 lazygit 在退出后用当前 nvim 实例打开被编辑的文件（而非新起进程）
-      vim.g.lazygit_floating_window_scaling_factor = 0.9
-      vim.g.lazygit_floating_window_winblend = 0
-      vim.g.lazygit_use_neovim_remote = 1  -- 关键：回跳当前 nvim，且能跳到具体行
-
-      -- which-key 归类（如果装了 which-key）
-      local wk_ok, wk = pcall(require, "which-key")
-      if wk_ok then
-        wk.add({
-          { "<leader>gg", desc = "[Git] 打开 Lazygit" },
-          { "<leader>gG", desc = "[Git] Lazygit（当前文件）" },
-          { "<leader>gl", desc = "[Git] Lazygit 查看提交日志" },
-        })
-      end
-    end,
-  },
+  -- ── Lazygit 已改为普通分屏启动，见 lua/tools/lazygit.lua 与 keymaps.lua ──
 
   -- ── Diffview：全局 diff 视图 + 冲突解决 ───────
   {
@@ -186,5 +160,15 @@ return {
         desc = "Diff 窗口 which-key 快捷键提示",
       })
     end,
+  },
+
+  -- ── Fugitive：:Git 命令全家桶（status / blame / commit / push） ──
+  {
+    "tpope/vim-fugitive",
+    cmd = { "Git", "G", "GitAdd", "GitCommit", "GitBlame" },
+    keys = {
+      { "<leader>gv", "<cmd>Git<cr>",       desc = "[Git] :Git 状态面板" },
+      { "<leader>gB", "<cmd>Git blame<cr>", desc = "[Git] 当前文件 blame" },
+    },
   },
 }

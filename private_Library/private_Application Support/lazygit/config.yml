@@ -17,8 +17,12 @@ git:
 
 # ── 编辑器与外部命令 ───────────────────────
 os:
-  # 让 lazygit 编辑文件时复用当前 nvim 实例（配合 lazygit.nvim 使用）
-  editPreset: "nvim"
+  # 用 neovim-remote 把编辑请求发给正在运行的 nvim 实例（而不是嵌套一个新 nvim）
+  # --remote-wait：等你关掉该 buffer 再回到 lazygit
+  # bufhidden=wipe 是必需的：--remote-wait 要等 buffer 被卸载才返回，否则 lazygit 会一直卡住
+  # tabnew：在新 tab 里全屏打开文件，:q 关闭后回到带 lazygit 的原 tab
+  edit: '$HOME/.local/bin/nvr -cc "tabnew" --remote-wait +''set bufhidden=wipe'' "{{filename}}"'
+  editAtLine: '$HOME/.local/bin/nvr -cc "tabnew" --remote-wait +''set bufhidden=wipe'' +{{line}} "{{filename}}"'
 
 # ── 通用界面 ───────────────────────────────
 gui:
@@ -27,6 +31,7 @@ gui:
   showRootItemInFileTree: true  # 文件树显示根节点，分组归属更清晰
   showRandomTip: false
   showCommandLog: true
+  promptToReturnFromSubprocess: false  # 外部编辑器返回后不再提示 "Press enter to return to lazygit"
   scrollHeight: 2
   commitLength:
     show: true
