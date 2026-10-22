@@ -36,7 +36,7 @@ function M.split(args)
     return
   end
 
-  local height = math.max(10, math.floor(vim.o.lines * 0.35))
+  local height = math.max(10, math.floor(vim.o.lines * 0.75))
   vim.cmd(("botright %dsplit"):format(height))
   win = vim.api.nvim_get_current_win()
 

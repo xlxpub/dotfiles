@@ -161,14 +161,4 @@ return {
       })
     end,
   },
-
-  -- ── Fugitive：:Git 命令全家桶（status / blame / commit / push） ──
-  {
-    "tpope/vim-fugitive",
-    cmd = { "Git", "G", "GitAdd", "GitCommit", "GitBlame" },
-    keys = {
-      { "<leader>gv", "<cmd>Git<cr>",       desc = "[Git] :Git 状态面板" },
-      { "<leader>gB", "<cmd>Git blame<cr>", desc = "[Git] 当前文件 blame" },
-    },
-  },
 }
