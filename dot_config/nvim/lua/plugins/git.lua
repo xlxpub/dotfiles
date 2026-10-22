@@ -7,6 +7,7 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = "BufReadPost",
+    cmd = "Gitsigns",
     config = function()
       require("gitsigns").setup({
         signs = {
