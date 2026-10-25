@@ -65,6 +65,43 @@ do
   end
 end
 
+-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+--  自动签名帮助：输入 ( 或 , 时弹出参数提示
+-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+vim.api.nvim_create_autocmd("InsertCharPre", {
+  callback = function()
+    local char = vim.v.char
+
+    -- 调用结束，收起浮窗（默认 close_events 被改写，不会自动关）
+    if char == ")" then
+      vim.schedule(function()
+        local win = vim.b.lsp_floating_preview
+        if win and vim.api.nvim_win_is_valid(win) then
+          vim.api.nvim_win_close(win, true)
+        end
+      end)
+      return
+    end
+
+    if char ~= "(" and char ~= "," then return end
+    vim.schedule(function()
+      -- 没有支持 signatureHelp 的 client 时直接跳过，避免每次输入都发无谓请求
+      if vim.tbl_isempty(vim.lsp.get_clients({ bufnr = 0, method = "textDocument/signatureHelp" })) then
+        return
+      end
+      vim.lsp.buf.signature_help({
+        silent = true,
+        -- 浮窗已存在时，默认会"进入"该浮窗并 stopinsert（即按两次 K 进 hover 的行为）。
+        -- 自动触发必须关掉，否则打逗号会被拽进浮窗。
+        focusable = false,
+        -- 默认还会在 CursorMovedI / InsertCharPre 时关闭；去掉这两个，
+        -- 否则浮窗刚弹出就被下一个键入的字符关掉。改为离开 insert 或光标跳动时关闭。
+        close_events = { "InsertLeave", "CursorMoved" },
+      })
+    end)
+  end,
+})
+
 local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
