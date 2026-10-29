@@ -1,4 +1,4 @@
--- Lazygit：分屏（split）或浮窗（float）启动
+-- Lazygit：全屏 tab 或浮窗（float）启动
 -- 配合 nvr：在 lazygit 里按 e 会在新 tab 打开文件，与窗口形态无关
 local M = {}
 
@@ -29,15 +29,14 @@ local function track_exit(buf)
   })
 end
 
---- 下方普通分屏启动；args 为附加参数，如 { "log" } 或 { "-f", "file" }
+--- 在新 tab 里启动（tab 内唯一窗口即满屏）；args 为附加参数，如 { "log" } 或 { "-f", "file" }
 function M.split(args)
   if win and vim.api.nvim_win_is_valid(win) then
     vim.api.nvim_set_current_win(win)
     return
   end
 
-  local height = math.max(10, math.floor(vim.o.lines * 0.75))
-  vim.cmd(("botright %dsplit"):format(height))
+  vim.cmd("tabnew")
   win = vim.api.nvim_get_current_win()
 
   vim.cmd("terminal " .. build_cmd(args))

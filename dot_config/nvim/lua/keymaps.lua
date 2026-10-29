@@ -208,13 +208,13 @@ map("n", "<leader>jeM", function() require("tools.json_md_preview").preview_brow
 	{ desc = "提取 JSON 中的 Markdown（浏览器预览）" })
 
 -- ══════════════════════════════
---  Git / Lazygit（在普通分屏中启动，配合 nvr 把 e 回跳到当前 nvim）
+--  Git / Lazygit（在新 tab 中全屏启动，配合 nvr 把 e 回跳到当前 nvim）
 -- ══════════════════════════════
 local function lazygit(args)
 	require("tools.lazygit").open(args)
 end
 
 map("n", "<leader>gg", function() lazygit() end,
-	{ desc = "[Git] Lazygit（分屏）" })
+	{ desc = "[Git] Lazygit（全屏 tab）" })
 map("n", "<leader>gl", function() lazygit({ "log" }) end,
 	{ desc = "[Git] Lazygit 提交日志" })
