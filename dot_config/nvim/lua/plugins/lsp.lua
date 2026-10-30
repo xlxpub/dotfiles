@@ -136,7 +136,7 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed      = { "gopls", "lua_ls", "basedpyright", "marksman" },
+        ensure_installed      = { "gopls", "lua_ls", "basedpyright", "ruff", "marksman" },
         automatic_installation = true,
       })
     end,
@@ -246,8 +246,40 @@ return {
         },
       })
 
+      -- ── Python：ruff（lint + 快速修复）──────
+      -- ruff 0.4+ 自带 LSP（`ruff server`），不再需要已弃用的 ruff-lsp。
+      -- 格式化交给 conform.nvim 的 ruff_format，这里只开诊断与 code action，
+      -- 避免 LSP 与 conform 同时改文件。
+      vim.lsp.config("ruff", {
+        root_markers = {
+          "pyproject.toml",
+          "ruff.toml",
+          ".ruff.toml",
+          "setup.py",
+          "setup.cfg",
+          "requirements.txt",
+          ".git",
+        },
+        init_options = {
+          settings = {
+            -- 关闭 LSP 自带的格式化，统一由 conform 处理
+            organizeImports = false,
+            fixAll = true,
+            lint = {
+              -- 修完就落地，等价于 ruff check --fix
+              extendSelect = {},
+            },
+          },
+        },
+        on_attach = function(client)
+          -- 显式禁用 LSP 格式化能力，防止 <leader>lf 的 lsp_fallback 走到 ruff server
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end,
+      })
+
       -- 启用所有已配置的服务器
-      vim.lsp.enable({ "gopls", "lua_ls", "basedpyright", "marksman" })
+      vim.lsp.enable({ "gopls", "lua_ls", "basedpyright", "ruff", "marksman" })
     end,
   },
 
@@ -379,6 +411,7 @@ return {
         formatters_by_ft = {
           go         = { "goimports", "gofumpt" },
           lua        = { "stylua" },
+          python     = { "ruff_fix", "ruff_format" },
           json       = { "prettier" },
           jsonc      = { "prettier" },
           yaml       = { "prettier" },
@@ -393,9 +426,27 @@ return {
         },
         -- 已关闭保存时自动格式化：通过 <leader>lf 手动触发
         -- format_on_save = { timeout_ms = 3000, lsp_fallback = true },
+        -- ruff_fix：ruff check --fix 修复可自动修复的 lint（含 import 排序）
+        -- ruff_format：ruff format，等价 black
         formatters = {
           prettier = {
             prepend_args = { "--print-width", "100" },
+          },
+          ruff_fix = {
+            command = "ruff",
+            args = {
+              "check",
+              "--fix",
+              "--fix-only",
+              "--stdin-filename", "$FILENAME",
+              "-",
+            },
+            stdin = true,
+          },
+          ruff_format = {
+            command = "ruff",
+            args = { "format", "--stdin-filename", "$FILENAME", "-" },
+            stdin = true,
           },
         },
       })
