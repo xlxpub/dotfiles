@@ -1,5 +1,6 @@
-: ${CMS:?"请设置CMS环境变量"}
-echo "CMS:${CMS};"
+COOKIE="${CMS_COOKIE:?请设置CMS_COOKIE环境变量"}
+echo "COOKIE:${COOKIE};"
+exit 0
   curl 'http://cms.video.cloud.cctv.com/api/sports/program/update?env=PROD&classification_type=event' \
   -H 'Content-Type: application/json' \
   -H "Cookie:${CMS_COOKIE}" \
