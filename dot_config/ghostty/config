@@ -9,6 +9,9 @@
 font-family = "Maple Mono NF CN"
 font-size = 14
 adjust-cell-height = 2
+# 关闭字体连字，避免 >= 渲染成 ≥、!= 渲染成 ≠
+font-feature = -calt
+font-feature = -liga
 # pane分割线的颜色
 split-divider-color = "#e6ffed"
 
