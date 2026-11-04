@@ -162,10 +162,9 @@ return {
 				-- 自动跟随当前文件：切换 buffer 时文件树自动定位
 				update_focused_file = {
 					enable = true,
-					-- 注意：update_root 必须是表，写成 false 会让 .enable 变 nil，
-					-- 导致 NvimTreeFindFile(<leader>E) 永远不切换根目录
+					-- 自动定位时保持根目录不变；<leader>E 可主动切换根目录
 					update_root = {
-						enable = true, -- 文件在树外时把根切到该文件所在目录
+						enable = false,
 						ignore_list = {},
 					},
 				},

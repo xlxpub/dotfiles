@@ -240,3 +240,17 @@ blackbg(){
 # bsd sed 提取reqBody
 alias liuer_reqbody="sed -E 's/.*reqBody:([^{]*\{.*\}).*respBody:.*/\1/'"
 alias liuer_respbody="sed 's/.*respBody://'|sed 's/\.Cost.*$//; s/折叠//'"
+
+
+
+#export PATH="$HOME/.codebuddy/bin:$PATH"
+
+# >>> StarCode CLI >>>
+STARCODE_BIN_DIR="$HOME/.starcode/bin"
+if [ -d "$STARCODE_BIN_DIR" ]; then
+  case ":$PATH:" in
+    *":$STARCODE_BIN_DIR:"*) ;;
+    *) export PATH="$STARCODE_BIN_DIR:$PATH" ;;
+  esac
+fi
+# <<< StarCode CLI <<<
