@@ -72,8 +72,7 @@ map({ "n", "v" }, "<leader>sP", '"+P',  { desc = "从系统剪贴板粘贴（前
 --  文件树（NvimTree）
 -- ══════════════════════════════
 map("n", "<leader>e",  "<cmd>NvimTreeToggle<cr>",       { desc = "文件树开关" })
--- 定位当前文件：树关闭时一并打开；文件不在当前根目录下时把根切过去
--- （直接用 api 而非 :NvimTreeFindFile，避免根目录不变时静默无反应）
+-- 将文件树根切到当前文件的两层上级目录并定位文件
 map("n", "<leader>E", function()
 	local ok, api = pcall(require, "nvim-tree.api")
 	if not ok then
@@ -85,7 +84,10 @@ map("n", "<leader>E", function()
 		vim.notify("当前 buffer 没有关联文件，无法定位", vim.log.levels.WARN)
 		return
 	end
-	api.tree.find_file({ open = true, focus = true, update_root = true })
+	local root = vim.fn.fnamemodify(path, ":h:h")
+	api.tree.open()
+	api.tree.change_root(root)
+	api.tree.find_file({ buf = path, open = true, focus = true })
 end, { desc = "文件树定位当前文件（含树外文件）" })
 -- 回到 nvim 启动时的根目录（<leader>E 切走之后用它回退）
 map("n", "<leader>0", function()
@@ -98,8 +100,9 @@ map("n", "<leader>0", function()
 	if not root or root == "" then
 		root = vim.fn.getcwd()
 	end
-	require("nvim-tree.api").tree.change_root(root)
-	require("nvim-tree.api").tree.find_file({ open = true, focus = true })
+	local api = require("nvim-tree.api")
+	api.tree.open()
+	api.tree.change_root(root)
 	vim.notify("文件树根目录 → " .. vim.fn.fnamemodify(root, ":~"))
 end, { desc = "文件树：回到启动时的根目录" })
 
