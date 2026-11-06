@@ -193,7 +193,7 @@ return {
     "keaising/im-select.nvim",
     lazy = false,
     config = function()
-      local command = "im-select"
+      local command = "macism"
       if vim.fn.executable(command) ~= 1 then
         return
       end
