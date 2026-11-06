@@ -26,6 +26,21 @@ return {
       local dap = require("dap")
       local dapui = require("dapui")
       dapui.setup()
+      dap.adapters.go = function(callback, config)
+        callback({
+          type = "server",
+          port = "${port}",
+          executable = {
+            command = "dlv",
+            args = { "dap", "-l", "127.0.0.1:${port}" },
+            cwd = config.cwd,
+          },
+        })
+      end
+      dap.configurations.go = {
+        { type = "go", name = "Debug current package", request = "launch", program = "${fileDirname}", cwd = "${fileDirname}" },
+        { type = "go", name = "Debug current package tests", request = "launch", mode = "test", program = "${fileDirname}", cwd = "${fileDirname}" },
+      }
       require("dap-python").setup(vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python")
       dap.listeners.after.event_initialized["dapui"] = function() dapui.open() end
       dap.listeners.before.event_terminated["dapui"] = function() dapui.close() end
