@@ -188,21 +188,67 @@ return {
   },
 
   -- ── 输入法自动切换 ────────────────────────────
-  --   离开插入模式 → 自动切换到 ABC 英文
-  --   进入插入模式 → 恢复离开前的输入法（记住上次状态）
+  --   普通模式和命令行模式使用英文，插入模式恢复之前的输入法
   {
     "keaising/im-select.nvim",
-    event = "VeryLazy",
+    lazy = false,
     config = function()
-      require("im_select").setup({
-        -- 默认输入法标识（搜狗拼音）—— 任何情况下都强制切到搜狗
-        default_im_select = "com.sogou.inputmethod.sogou.pinyin",
-        -- 命令行工具路径（brew 安装）
-        default_command = "im-select",
-        -- 不需要"恢复上次输入法"，因为始终用搜狗
-        set_previous_events = {},
-        -- 进入/离开任何模式都切换为搜狗
-        set_default_events = { "InsertEnter", "InsertLeave", "BufEnter", "FocusGained" },
+      local command = "im-select"
+      if vim.fn.executable(command) ~= 1 then
+        return
+      end
+
+      local english = "com.apple.keylayout.ABC"
+      local function current_input_method()
+        local current = vim.trim(vim.fn.system({ command }))
+        return vim.v.shell_error == 0 and current ~= "" and current or english
+      end
+      local function switch_input_method(input_method)
+        vim.fn.system({ command, input_method })
+      end
+
+      local previous = current_input_method()
+      local inserting = false
+      local command_line_inputs = {}
+      switch_input_method(english)
+      local group = vim.api.nvim_create_augroup("input-method-switch", { clear = true })
+      vim.api.nvim_create_autocmd("InsertLeave", {
+        group = group,
+        callback = function()
+          inserting = false
+          previous = current_input_method()
+          switch_input_method(english)
+        end,
+      })
+      vim.api.nvim_create_autocmd("InsertEnter", {
+        group = group,
+        callback = function()
+          inserting = true
+          switch_input_method(previous)
+        end,
+      })
+      vim.api.nvim_create_autocmd("CmdlineEnter", {
+        group = group,
+        callback = function()
+          table.insert(command_line_inputs, inserting and current_input_method() or false)
+          switch_input_method(english)
+        end,
+      })
+      vim.api.nvim_create_autocmd("CmdlineLeave", {
+        group = group,
+        callback = function()
+          local input_method = table.remove(command_line_inputs)
+          switch_input_method(input_method or english)
+        end,
+      })
+      vim.api.nvim_create_autocmd("FocusGained", {
+        group = group,
+        callback = function()
+          local mode = vim.fn.mode(1):sub(1, 1)
+          if mode == "n" or mode == "c" then
+            switch_input_method(english)
+          end
+        end,
       })
     end,
   },
