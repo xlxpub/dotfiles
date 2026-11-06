@@ -1,4 +1,37 @@
 return {
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      "nvim-neotest/nvim-nio",
+      "mfussenegger/nvim-dap-python",
+    },
+    keys = {
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "切换断点" },
+      { "<leader>dc", function()
+        local python = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
+        if vim.bo.filetype == "python" and vim.fn.executable(python) == 0 then
+          vim.notify("debugpy 未安装，请运行 :MasonInstall debugpy", vim.log.levels.ERROR)
+          return
+        end
+        require("dap").continue()
+      end, desc = "启动或继续调试" },
+      { "<leader>dn", function() require("dap").step_over() end, desc = "单步跳过" },
+      { "<leader>di", function() require("dap").step_into() end, desc = "单步进入" },
+      { "<leader>do", function() require("dap").step_out() end, desc = "单步跳出" },
+      { "<leader>du", function() require("dapui").toggle() end, desc = "切换调试界面" },
+      { "<leader>dq", function() require("dap").terminate() end, desc = "结束调试" },
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      dapui.setup()
+      require("dap-python").setup(vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python")
+      dap.listeners.after.event_initialized["dapui"] = function() dapui.open() end
+      dap.listeners.before.event_terminated["dapui"] = function() dapui.close() end
+      dap.listeners.before.event_exited["dapui"] = function() dapui.close() end
+    end,
+  },
   -- ── Markdown 浏览器预览 ───────────────────────
   --   :MarkdownPreview       启动浏览器预览
   --   :MarkdownPreviewStop   关闭
