@@ -1,0 +1,30 @@
+patch:
+  # 不挂载英文和中英混合词库，保留中文及其他功能
+  engine/translators:
+    - punct_translator
+    - script_translator
+    - lua_translator@*date_translator
+    - lua_translator@*lunar
+    - lua_translator@*uuid
+    - table_translator@custom_phrase
+    - table_translator@radical_lookup
+    - lua_translator@*unicode
+    - lua_translator@*number_translator
+    - lua_translator@*calc_translator
+    - lua_translator@*force_gc
+
+  # 删掉 ascii 开关，只留中文
+  switches/@0:
+    name: ascii_mode
+    reset: 0
+    states: [ 中文 ]
+
+  # 禁用所有切换英文的快捷键，shift不再切英文
+  ascii_composer:
+    switch_key:
+      Shift_L: noop
+      Shift_R: noop
+      Caps_Lock: noop
+      Control_L: noop
+      Control_R: noop
+
