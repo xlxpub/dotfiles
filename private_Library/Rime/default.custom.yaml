@@ -1,0 +1,4 @@
+patch:
+  # 仅用 F4 打开方案选单，释放 Ctrl+` 和 Ctrl+Shift+`
+  switcher/hotkeys:
+    - F4
