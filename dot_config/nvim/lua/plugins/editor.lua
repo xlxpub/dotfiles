@@ -47,6 +47,28 @@ return {
       dap.listeners.before.event_exited["dapui"] = function() dapui.close() end
     end,
   },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    opts = {},
+    init = function()
+      local function set_markdown_hl()
+        if vim.o.background == "dark" then
+          vim.api.nvim_set_hl(0, "RenderMarkdownCode", { bg = "#30343b" })
+          vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { fg = "#f0d9a5", bg = "#45403a" })
+        else
+          vim.api.nvim_set_hl(0, "RenderMarkdownCode", { bg = "#e8e8e8" })
+          vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { fg = "#573b00", bg = "#f4e7cf" })
+        end
+      end
+      vim.api.nvim_create_autocmd("ColorScheme", { callback = set_markdown_hl })
+      set_markdown_hl()
+    end,
+    keys = {
+      { "<leader>mr", "<cmd>RenderMarkdown buf_toggle<cr>", ft = "markdown", desc = "切换 Markdown 编辑器内渲染" },
+    },
+  },
   -- ── Markdown 浏览器预览 ───────────────────────
   --   :MarkdownPreview       启动浏览器预览
   --   :MarkdownPreviewStop   关闭
